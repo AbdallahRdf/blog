@@ -5,7 +5,7 @@ import logo from '../assets/logo.svg'
 
 function Navbar() {
     return (
-        <nav className='fixed top-4 w-full lg:w-8/12 rounded-xl mx-auto'>
+        <nav className='fixed top-4 w-full xl:w-8/12 rounded-xl mx-auto'>
             <div className='backdrop-blur-2xl brightness-150 -z-10 absolute inset-0 rounded-xl'></div>
             <ul className='rounded-xl px-4 py-3 flex items-center gap-4'>
                 <li className='grow'>
@@ -19,7 +19,7 @@ function Navbar() {
                     </button>
                 </li>
                 {
-                    (false) 
+                    (true) 
                     ?
                     <>
                         <li>
@@ -31,7 +31,7 @@ function Navbar() {
                     </>
                     :
                     <li>
-                        <Link to="/login" className='bg-white text-slate-900 hover:bg-transparent hover:text-slate-50 transition-colors ease-in-out delay-75 py-4 px-6 rounded-lg border-2 text-md font-semibold'>
+                        <Link to="/login" className='bg-white text-slate-900 hover:bg-transparent hover:text-slate-50 transition-colors ease-in-out py-4 px-6 rounded-lg border-2 text-md font-semibold'>
                             LogIn
                         </Link>
                     </li>
