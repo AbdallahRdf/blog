@@ -1,13 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Bell, CircleUserRound, Search } from 'lucide-react'
-import logo from '../assets/logo.svg'
+import logo from '../assets/img/logo.svg'
 
 function Navbar() {
     return (
-        <nav className='fixed top-4 w-full xl:w-8/12 rounded-xl mx-auto'>
-            <div className='backdrop-blur-2xl brightness-150 -z-10 absolute inset-0 rounded-xl'></div>
-            <ul className='rounded-xl px-4 py-3 flex items-center gap-4'>
+        <nav className='fixed top-4 w-full xl:w-[1280px] rounded-xl mx-auto z-50'>
+            <div className='backdrop-blur-2xl brightness-150 z-40 absolute inset-0 rounded-xl'></div>
+            <ul className='rounded-xl px-4 py-3 flex items-center gap-4 relative z-50'>
                 <li className='grow'>
                     <Link to="/">
                         <img src={logo} alt="Logo" className='inline' />

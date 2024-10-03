@@ -1,7 +1,7 @@
 import React from 'react'
-import githubLogo from '../assets/github-logo.svg'
-import linkedinLogo from '../assets/linkedin-logo.svg'
-import logo from '../assets/logo.svg'
+import githubLogo from '../assets/img/github-logo.svg'
+import linkedinLogo from '../assets/img/linkedin-logo.svg'
+import logo from '../assets/img/logo.svg'
 import { Link } from 'react-router-dom'
 
 function Footer() {
