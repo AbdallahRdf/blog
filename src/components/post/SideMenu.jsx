@@ -4,7 +4,7 @@ import PostTag from './PostTag'
 
 function SideMenu({isItOnTheSide = true}) {
     return (
-        <div className={`${isItOnTheSide ? 'hidden lg:flex lg:flex-col lg:gap-y-6 lg:min-w-80' : 'flex flex-col gap-y-6 min-w-80 lg:hidden'}`}>
+        <div className={`${isItOnTheSide ? 'hidden lg:flex lg:flex-col lg:gap-y-6 lg:min-w-80' : 'flex flex-col gap-y-6 min-w-80 lg:hidden mt-6'}`}>
 
             <div className='p-4 rounded-xl border border-slate-700'>
                 <p className='text-sm text-slate-400 mb-2'>Author</p>

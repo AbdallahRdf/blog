@@ -1,8 +1,12 @@
+import { Ellipsis } from 'lucide-react'
 import React from 'react'
 
 function CodeSnippetOutput({children}) {
   return (
-    <div className='bg-slate-900 my-6 rounded-2xl overflow-x-auto px-4 py-6'>{children}</div>
+    <div className='border border-slate-800 my-6 rounded-2xl overflow-x-auto'>
+      <div className='text-slate-300 border-b border-slate-800 bg-slate-800 py-2 px-3'>Output</div>
+      <div className='bg-zinc-950 px-4 py-6'>{children}</div>
+    </div>
   )
 }
 

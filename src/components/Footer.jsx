@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 function Footer() {
     return (
-        <footer className="border-t border-t-fuchsia-400 mt-28 pt-16 pb-6 px-9 flex-none">
+        <footer className="border-t border-t-fuchsia-400 mt-12 pt-16 pb-6 px-9 flex-none">
             <div className='xl:w-8/12 mx-auto '>
                 <Link to="/" className='flex items-center'>
                     <img className='inline' src={logo} alt="Logo" /> <span className='text-4xl'>Blog</span>
