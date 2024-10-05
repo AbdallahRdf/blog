@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp, CircleUserIcon, EllipsisVertical, ThumbsDown, ThumbsUp } from 'lucide-react'
 import React, { useState } from 'react'
 import ReplyBox from './ReplyBox';
+import userAvatar from '../../assets/img/user-circle-svgrepo-com.svg'
 
 function CommentBox() {
     const [isRepliesOpen, setIsRepliesOpen] = useState(false);
@@ -8,8 +9,11 @@ function CommentBox() {
     const handleRepliesBtnClikc = () => setIsRepliesOpen(prev => !prev);
 
     return (
-        <div className='flex items-start gap-3 my-6'>
-            <button><CircleUserIcon size={48} /></button>
+        <div className='relative flex items-start gap-3 my-6 '>
+            {/* <button><CircleUserIcon size={48} /></button> */}
+            {/* <button> */}
+                <img src={userAvatar} alt="user avatar" className='size-10 md:size-12' />
+            {/* </button> */}
             <div>
                 <p className='font-semibold text-lg mb-2'>@Username <span className='font-normal ps-2 text-md'>2days ago</span></p>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores inventore repudiandae quae quam amet?</p>
@@ -24,7 +28,7 @@ function CommentBox() {
                     </button>
                     <button className='hover:bg-slate-800 rounded-full px-3 py-1'>Reply</button>
                 </div>
-                <button onClick={handleRepliesBtnClikc} className='flex text-indigo-500 mt-2 gap-3 hover:bg-slate-800 rounded-full py-2 px-4'>
+                <button onClick={handleRepliesBtnClikc} className='flex text-blue-400 mt-2 gap-3 hover:bg-slate-800 rounded-full py-2 px-4'>
                     {
                         isRepliesOpen
                         ?
@@ -35,7 +39,7 @@ function CommentBox() {
                     <span>3 Replies</span>
                 </button>
 
-                <div className={`${isRepliesOpen ? "block" : "hidden"}`}>
+                <div className={`${isRepliesOpen ? "block" : "hidden"} -ms-8 sm:m-0`}>
                     <ReplyBox />
                     <ReplyBox />
                     <ReplyBox />

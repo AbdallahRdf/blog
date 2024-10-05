@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
 import { CircleUserRound } from 'lucide-react'
+import userAvatar from '../../assets/img/user-circle-svgrepo-com.svg'
+
 
 function CommentFrom() {
 
@@ -15,7 +17,8 @@ function CommentFrom() {
     return (
         <form action="#">
             <div className='flex items-center gap-3 mb-2'>
-                <button><CircleUserRound size={48} /></button>
+                {/* <button><CircleUserRound size={48} /></button> */}
+                <img src={userAvatar} alt="user avatar" className='size-10 md:size-12' />
                 <textarea
                     ref={textareaRef}
                     onChange={handleInput}
@@ -25,8 +28,8 @@ function CommentFrom() {
                 ></textarea>
             </div>
             <div className='flex justify-end gap-2'>
-                <button className='py-2 px-5 text-lg hover:bg-slate-700 rounded-full'>Cancel</button>
-                <input type='submit' value="Comment" className='py-2 px-3 text-lg bg-fuchsia-700 rounded-full cursor-pointer' />
+                <button className='py-2 px-5 text-md sm:text-lg hover:bg-slate-700 rounded-full'>Cancel</button>
+                <input type='submit' value="Comment" className='py-2 px-3  text-md sm:text-lg bg-purple-700 hover:bg-purple-600 rounded-full cursor-pointer' />
             </div>
         </form>
     )

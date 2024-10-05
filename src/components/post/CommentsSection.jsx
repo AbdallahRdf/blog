@@ -6,7 +6,7 @@ function CommentsSection() {
 
     return (
         <div className='mt-8 border-t border-slate-700'>
-            <p className='mt-5 mb-8 text-3xl'>Comments (1K)</p>
+            <p className='mt-5 mb-8 text-2xl md:text-3xl'>Comments (1K)</p>
 
             <CommentFrom />
 

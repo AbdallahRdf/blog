@@ -54,7 +54,7 @@ function Signup() {
                             type="text"
                             id="fullName"
                             placeholder='Jhon Doe'
-                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-600'
+                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600'
                         />
                         <User size={20} className='absolute top-4 left-3' />
                     </div>
@@ -68,7 +68,7 @@ function Signup() {
                             type="email"
                             id="user"
                             placeholder='DJhon'
-                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-600'
+                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600'
                         />
                         <AtSign size={20} className='absolute top-4 left-3' />
                     </div>
@@ -82,7 +82,7 @@ function Signup() {
                             type="email"
                             id="email"
                             placeholder='jhondoe@example.com'
-                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-600'
+                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600'
                         />
                         <Mail size={20} className='absolute top-4 left-3' />
                     </div>
@@ -97,7 +97,7 @@ function Signup() {
                             type="password"
                             id="password"
                             placeholder='******'
-                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-600'
+                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600'
                         />
                         <LockIcon size={20} className='absolute top-4 left-3' />
                         <button type='button' onClick={handlePassowrdClick} className='absolute top-3 right-3 hover:bg-slate-700 rounded-full p-1'>
@@ -115,7 +115,7 @@ function Signup() {
                             type="password"
                             id="confirmPassword"
                             placeholder='******'
-                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-600'
+                            className='w-full bg-zinc-900 hover:bg-zinc-800 py-3 px-12 text-lg rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600'
                         />
                         <LockIcon size={20} className='absolute top-4 left-3' />
                         <button type='button' onClick={handleConfirmPassowrdClick} className='absolute top-3 right-3 hover:bg-slate-700 rounded-full p-1'>
@@ -127,8 +127,8 @@ function Signup() {
                 <div className='mt-10'>
                     <input
                         type="submit"
-                        value="Log in"
-                        className='w-full bg-fuchsia-700 hover:bg-fuchsia-600 py-3 px-12 font-bold rounded-xl cursor-pointer'
+                        value="Sign up"
+                        className='w-full bg-purple-700 hover:bg-purple-600 py-3 px-12 font-bold rounded-xl cursor-pointer'
                     />
                 </div>
 
@@ -137,7 +137,7 @@ function Signup() {
             </form>
 
             {/* footer */}
-            <div className='text-slate-500 text-center w-full pb-3 mt-20'>
+            <div className='text-slate-500 text-sm text-center w-full pb-3 mt-20'>
                 Radfi Abdallah © 2024 | All rights reserved.
             </div>
         </div>
