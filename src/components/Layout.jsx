@@ -8,7 +8,7 @@ function Layout() {
     const { pathname } = useLocation();
 
     return (
-        (pathname !== "/login" && pathname !== "/login")
+        (pathname !== "/login" && pathname !== "/signup")
         ?
         <div className='flex flex-col min-h-screen w-full'>
             <div className='w-full xl:w-[1280px] mx-auto relative flex-1'>

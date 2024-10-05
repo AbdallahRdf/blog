@@ -27,7 +27,7 @@ function Login() {
         <span className='text-4xl'>Blog</span>
       </Link>
 
-      <form className='px-3 w-96 max-w-full sm:px-0 sm:w-96 absolute top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2'>
+      <form className='px-3 w-96 max-w-full sm:px-0 sm:w-96 absolute top-[50%] sm:top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2'>
         <h1 className='text-4xl font-semibold text-center mb-4'>👋 Welcome back!</h1>
         <p className='text-lg font-normal text-center mb-6'>Log in to access your account</p>
 
