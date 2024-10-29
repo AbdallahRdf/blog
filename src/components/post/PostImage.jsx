@@ -2,7 +2,7 @@ import React from 'react'
 
 function PostImage({url}) {
   return (
-    <img className="w-full rounded-3xl mx-auto mb-8" src={url} alt="image" />
+    <img className="w-full rounded-xl mx-auto my-6 sm:my-8" src={url} alt="image" />
   )
 }
 

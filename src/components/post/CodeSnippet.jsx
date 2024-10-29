@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, CopyIcon } from 'lucide-react';
 
 
-const CodeSnippet = ({ language, children }) => {
+const CodeSnippet = ({ language, code }) => {
 
     const preRef = useRef(null);
     const [preHeight, setPreHeight] = useState(0);
@@ -12,40 +12,44 @@ const CodeSnippet = ({ language, children }) => {
 
     const handleClick = (e) => {
         setIsCopied(true);
-        navigator.clipboard.writeText(children)
+        navigator.clipboard.writeText(code)
         setTimeout(() => {
             setIsCopied(false);
         }, 2500);
     }
 
-    useEffect(() => {                   
+    useEffect(() => {
         setPreHeight(preRef.current.offsetHeight)
     }, [])
 
     return (
-        <div className='relative' style={{ height: `${preHeight}px`}} >
-            <div ref={preRef} className='border border-slate-800 rounded-2xl overflow-x-auto absolute top-0 left-0 right-0'>
-                <div className='text-slate-300 border-b border-slate-800 bg-slate-800 py-2 px-3 flex justify-between'>
+        <div className='relative' style={{ height: `${preHeight}px` }} >
+            <div ref={preRef} className='text-sm sm:text-base border border-zinc-800 rounded-xl overflow-x-auto absolute top-0 left-0 right-0'>
+                <div className='text-zinc-300 border-b border-zinc-800 bg-zinc-800 py-2 px-3 flex justify-between'>
                     <span>{language}</span>
-                    <button disabled={isCopied} title='Copy' onClick={handleClick}>
+                    <button
+                        disabled={isCopied}
+                        title='Copy'
+                        onClick={handleClick}
+                    >
                         {
                             isCopied
-                            ?
-                            <>
-                                <Check className='inline' size={20}/>
-                                <span className='ps-1'>Copied!</span>
-                            </>
-                            :
-                            <>
-                                <CopyIcon className='inline' size={20}/> 
-                                <span className='ps-1'>Copy code</span>
-                            </>                            
+                                ?
+                                <>
+                                    <Check className='inline size-4 sm:size-5' />
+                                    <span className='ps-1'>Copied!</span>
+                                </>
+                                :
+                                <>
+                                    <CopyIcon className='inline size-4 sm:size-5' />
+                                    <span className='ps-1'>Copy code</span>
+                                </>
                         }
                     </button>
                 </div>
                 <SyntaxHighlighter language={language} style={irBlack}>
-                    {children}
-                </SyntaxHighlighter> 
+                    {code}
+                </SyntaxHighlighter>
             </div>
         </div>
     );

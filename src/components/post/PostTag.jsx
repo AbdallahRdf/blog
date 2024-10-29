@@ -1,8 +1,8 @@
 import React from 'react'
 
-function PostTag({children}) {
+function PostTag({ tag }) {
     return (
-        <a href='/' className='text-purple-400 hover:bg-slate-800 p-1 rounded-lg'>{children}</a>
+        <a href='/' className='text-purple-400 hover:bg-slate-800 p-1 rounded-lg'>#{tag}</a>
     )
 }
 
