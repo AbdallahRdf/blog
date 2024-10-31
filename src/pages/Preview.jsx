@@ -11,7 +11,7 @@ import { ArrowBigLeft } from 'lucide-react'
 function Preview({ setShowPreviewMode, formValues: { title, cover, description, tags, content }, postBody, headers }) {
 
     return (
-        <div className='w-full xl:w-[1280px] mx-auto mt-32 mb-24 px-4'>
+        <div className='w-full xl:w-[1280px] mx-auto mt-32 mb-24 px-2 scroll-smooth'>
             <PostTitle>{title}</PostTitle>
 
             <PostPublishDate>FEB 10, 2024</PostPublishDate>
@@ -31,7 +31,8 @@ function Preview({ setShowPreviewMode, formValues: { title, cover, description, 
                 <SideMenu headers={headers} tags={tags} />
             </div>
             <button
-                className='fixed bottom-3 md:bottom-6 left-4 p-1 bg-lime-500 hover:bg-lime-400 rounded-full'
+                title='Back'
+                className='fixed bottom-3 md:bottom-6 left-4 p-2 text-slate-50 bg-lime-400 hover:bg-lime-300 rounded-full'
                 onClick={() => setShowPreviewMode(false)}
             >
                 <ArrowBigLeft className='size-7 sm:size-9' />

@@ -6,9 +6,9 @@ import { Calendar } from 'lucide-react'
 
 function Card() {
   return (
-    <div className='w-auto border border-slate-700 p-3 rounded-2xl hover:border-slate-200 transition-colors ease-in-out'>
+    <div className='w-auto border border-slate-300 dark:border-slate-700 p-3 rounded-2xl hover:border-slate-800 dark:hover:border-slate-200 transition-colors ease-in-out duration-300'>
       <Link to="/post">
-        <h3 className='font-bold text-xl sm:text-3xl my-4'>This is 2025, let's wrap up this sh*t</h3>
+        <h3 className='font-bold text-xl sm:text-3xl my-4 text-zinc-900 dark:text-zinc-100 transition-colors ease-in-out duration-300'>This is 2025, let's wrap up this sh*t</h3>
 
         <div className='flex gap-x-2 my-3'>
           <PostTag>#networking</PostTag>
@@ -17,7 +17,7 @@ function Card() {
           <PostTag>+3</PostTag>
         </div>
 
-        <p className='text-sm text-slate-300 font-normal ms-2 mb-3 flex items-center gap-2'>
+        <p className='transition-colors ease-in-out duration-300 text-sm text-neutral-500 dark:text-slate-300 font-normal ms-2 mb-3 flex items-center gap-2'>
           <Calendar className='inline size-3 sm:size-4' />
           <span>February 10, 2024</span>
         </p>

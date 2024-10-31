@@ -1,6 +1,7 @@
 import { Trash } from 'lucide-react'
 import React from 'react'
 import TextEditor from './TextEditor'
+import InputErrorMessage from '../InputErrorMessage';
 
 function TextEditorBlock({ blockData, error, handleBlockChange, deleteBlock }) {
 
@@ -14,7 +15,7 @@ function TextEditorBlock({ blockData, error, handleBlockChange, deleteBlock }) {
                 <Trash />
             </button>
             <TextEditor content={value} handleEditorChange={handleChange} />
-            {error && <small className='text-red-400 text-sm sm:text-base mt-1 ms-1'>{error.message}</small>}
+            {error && <InputErrorMessage message={error.message} />}
         </div>
     )
 }

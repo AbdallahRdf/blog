@@ -8,11 +8,12 @@ import { v4 as uuidv4 } from 'uuid';
 import TextEditor from '../components/createPostPage/TextEditor'
 import DOMPurify from 'dompurify'
 import Preview from './Preview'
-import { Code, FileText, Image, Terminal } from 'lucide-react'
 import TextArea from '../components/createPostPage/TextArea'
 import ImageInput from '../components/createPostPage/ImageInput'
 import TextEditorBlock from '../components/createPostPage/TextEditorBlock'
 import postBodyBlocks from '../enums/postBodyBlocks'
+import InputErrorMessage from '../components/InputErrorMessage'
+import AddPostBlockButton from '../components/createPostPage/AddPostBlockButton'
 
 const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/png']; // Allowed formats
 const POST_COVER_SIZE_LIMIT = 2 * 1024 * 1024; // 2MB
@@ -293,32 +294,32 @@ function NewPost() {
                 onSubmit={handleSubmit(handleFormSubmit)}
                 className='w-full xl:w-[1280px] mx-auto mt-20 mb-6 rounded-xl py-6'
             >
-                <h1 className='text-2xl sm:text-4xl font-semibold text-center'>Create new Post</h1>
+                <h1 className='text-2xl sm:text-4xl font-semibold text-center text-zinc-950 dark:text-zinc-50 transition-colors duration-300 ease-in-out'>Create new Post</h1>
                 <div className='flex flex-col my-6 px-3'>
-                    <label htmlFor='title' className='text-base sm:text-lg font-semibold text-slate-200 inline-block mb-2 ps-1'>Post Title</label>
+                    <label htmlFor='title' className='transition-colors duration-300 ease-in-out text-base sm:text-lg font-semibold text-zinc-900 dark:text-slate-200 inline-block mb-2 ps-1'>Post Title</label>
                     <input
                         type='text'
                         id='title'
                         placeholder='post title...'
-                        className={`w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg rounded-xl ring-1 ring-zinc-600 hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.title ? 'focus:ring-red-600' : 'focus:ring-zinc-300'}`}
+                        className={`transition-colors duration-300 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-xl ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.title ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
                         {...register('title')}
                     />
-                    {errors?.title && <small className='text-red-400 text-sm sm:text-base mt-1 ms-1'>{errors.title.message}</small>}
+                    {errors?.title && <InputErrorMessage message={errors.title.message} />}
                 </div>
 
                 <div className='flex flex-col my-6 px-3'>
-                    <label htmlFor='description' className='text-base sm:text-lg font-semibold text-slate-200 inline-block mb-2 ps-1'>Post Description</label>
+                    <label htmlFor='description' className='transition-colors duration-300 ease-in-out text-base sm:text-lg font-semibold text-zinc-900 dark:text-slate-200 inline-block mb-2 ps-1'>Post Description</label>
                     <textarea
                         id='description'
                         placeholder='post description'
-                        className={`w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg rounded-xl ring-1 ring-zinc-600 hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.description ? 'focus:ring-red-600' : 'focus:ring-zinc-300'}`}
+                        className={`transition-colors duration-300 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-xl ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.description ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
                         {...register('description')}
                     ></textarea>
-                    {errors?.description && <small className='text-red-400 text-sm sm:text-base mt-1 ms-1'>{errors.description.message}</small>}
+                    {errors?.description && <InputErrorMessage message={errors.description.message} />}
                 </div>
 
                 <div className='flex flex-col mb-6 mt-10 px-3'>
-                    <label htmlFor='cover' className='text-base sm:text-lg text-center cursor-pointer text-slate-200 w-full bg-transparent ring-1 ring-zinc-600 hover:ring-zinc-300 hover:text-slate-50 py-2 sm:py-3 px-12 rounded-xl'>Import Post Cover</label>
+                    <label htmlFor='cover' className='transition-colors duration-300 ease-in-out text-base sm:text-lg text-center cursor-pointer text-zinc-900 dark:text-slate-200 w-full bg-transparent ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 dark:hover:text-slate-50 py-2 sm:py-3 px-12 rounded-xl'>Import Post Cover</label>
                     <input
                         type='file'
                         accept='image/jpeg, image/jpg, image/png'
@@ -327,73 +328,41 @@ function NewPost() {
                         {...register('cover')}
                     />
                     {formValues.cover !== '' && <img src={URL.createObjectURL(formValues.cover[0])} alt='post cover' className='my-4 w-fit mx-auto rounded-lg' />}
-                    {errors?.cover && <small className='text-red-400 text-sm sm:text-base mt-1 ms-1'>{errors.cover.message}</small>}
+                    {errors?.cover && <InputErrorMessage message={errors.cover.message} />}
                 </div>
 
                 <div className='flex flex-col my-6 px-3'>
-                    <label htmlFor='tags' className='text-base sm:text-lg font-semibold text-slate-200 inline-block mb-2 ps-1'>Tags (separated by space)</label>
+                    <label htmlFor='tags' className='transition-colors duration-300 ease-in-out text-base sm:text-lg font-semibold text-zinc-900 dark:text-slate-200 inline-block mb-2 ps-1'>Tags (separated by space)</label>
                     <input
                         type='text'
                         placeholder='example: coding javascript backend ...'
                         id='tags'
-                        className={`w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg rounded-xl ring-1 ring-zinc-600 hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.tags ? 'focus:ring-red-600' : 'focus:ring-zinc-300'}`}
+                        className={`transition-colors duration-300 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg rounded-xl text-zinc-950 dark:text-zinc-50 ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2  ${errors?.tags ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
                         {...register('tags')}
                     />
-                    {errors?.tags && <small className='text-red-400 text-sm sm:text-base mt-1 ms-1'>{errors.tags.message}</small>}
+                    {errors?.tags && <InputErrorMessage message={errors.tags.message} />}
                 </div>
 
-                <h3 className='text-xl sm:text-3xl font-semibold text-slate-200 mb-2 px-3 text-center'>Blog Post Body</h3>
+                <h3 className='text-xl sm:text-3xl font-semibold text-zinc-900 dark:text-slate-200 mb-2 px-3 text-center'>Blog Post Body</h3>
                 <div className='px-3 my-6 '>
                     <TextEditor content={formValues.content} handleEditorChange={handleEditorChange} />
-                    {errors?.content && <small className='text-red-400 text-sm sm:text-base mt-1 ms-1'>{errors.content.message}</small>}
+                    {errors?.content && <InputErrorMessage message={errors.content.message} />}
                 </div>
 
                 {bodyBlocks}
 
                 <div className='mx-3 my-6 flex border border-zinc-600 rounded-lg'>
-                    <button
-                        onClick={addBlock}
-                        data-block-type={postBodyBlocks.CODE_SNIPPET}
-                        type='button'
-                        title='Code Snippet'
-                        className='flex items-center justify-center gap-2 py-2 sm:py-3 font-semibold hover:text-amber-500 w-full cursor-pointer hover:bg-zinc-800'
-                    >
-                        <Code className='inline' /> <span className='hidden sm:block'>Code snippet</span>
-                    </button>
-                    <button
-                        onClick={addBlock}
-                        data-block-type={postBodyBlocks.CODE_OUTPUT}
-                        type='button'
-                        title='Code output'
-                        className='flex items-center justify-center gap-2 py-2 sm:py-3 font-semibold hover:text-cyan-500 w-full cursor-pointer hover:bg-zinc-800'
-                    >
-                        <Terminal className='inline' /> <span className='hidden sm:block'>Code output</span>
-                    </button>
-                    <button
-                        onClick={addBlock}
-                        data-block-type={postBodyBlocks.IMAGE}
-                        type='button'
-                        title='Image'
-                        className='flex items-center justify-center gap-2 py-2 sm:py-3 font-semibold hover:text-rose-500 w-full cursor-pointer hover:bg-zinc-800'
-                    >
-                        <Image className='inline' /> <span className='hidden sm:block'>Image</span>
-                    </button>
-                    <button
-                        onClick={addBlock}
-                        data-block-type={postBodyBlocks.EDITOR}
-                        type='button'
-                        title='Editor'
-                        className='flex items-center justify-center gap-2 py-2 sm:py-3 font-semibold hover:text-lime-500 w-full cursor-pointer hover:bg-zinc-800'
-                    >
-                        <FileText className='inline' /> <span className='hidden sm:block'>Editor</span>
-                    </button>
+                    <AddPostBlockButton addBlock={addBlock} blockType={postBodyBlocks.CODE_SNIPPET} title="Code Snippet" />
+                    <AddPostBlockButton addBlock={addBlock} blockType={postBodyBlocks.CODE_OUTPUT} title="Code output" />
+                    <AddPostBlockButton addBlock={addBlock} blockType={postBodyBlocks.IMAGE} title="Image" />
+                    <AddPostBlockButton addBlock={addBlock} blockType={postBodyBlocks.EDITOR} title="Editor" />
                 </div>
 
                 <div className='flex justify-stretch flex-col-reverse sm:flex-row gap-2 mx-3 mt-6 sm:mt-10'>
-                    <button onClick={handleCancel} type='button' className='px-6 py-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-base sm:text-lg font-semibold transition-colors w-full'>Cancel</button>
-                    <button onClick={clearForm} type='button' className='px-6 py-2 bg-amber-500 hover:bg-amber-400 rounded-lg text-base sm:text-lg font-semibold transition-colors w-full'>Clear Form</button>
-                    <button onClick={handlePreview} type='button' className='px-6 py-2 bg-lime-500 hover:bg-lime-400 rounded-lg text-base sm:text-lg font-semibold transition-colors w-full'>Preview</button>
-                    <input type='submit' value='Save' disabled={isLoading} className='px-6 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-base sm:text-lg font-semibold transition-colors w-full cursor-pointer' />
+                    <button onClick={handleCancel} type='button' className='transition-colors duration-300 ease-in-out px-6 py-2 bg-gray-500 hover:bg-gray-400 text-zinc-50 rounded-lg text-base sm:text-lg font-semibold w-full'>Cancel</button>
+                    <button onClick={clearForm} type='button' className='transition-colors duration-300 ease-in-out px-6 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-50 rounded-lg text-base sm:text-lg font-semibold w-full'>Clear Form</button>
+                    <button onClick={handlePreview} type='button' className='transition-colors duration-300 ease-in-out px-6 py-2 bg-lime-500 hover:bg-lime-400 text-zinc-50 rounded-lg text-base sm:text-lg font-semibold w-full'>Preview</button>
+                    <input type='submit' value='Save' disabled={isLoading} className='transition-colors duration-300 ease-in-out px-6 py-2 bg-purple-600 hover:bg-purple-400 text-zinc-50 rounded-lg text-base sm:text-lg font-semibold w-full cursor-pointer' />
                 </div>
             </motion.form>
     )

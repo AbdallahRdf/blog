@@ -6,8 +6,8 @@ function UserHomePage() {
   return (
     <div>
       <div className='flex justify-between px-2 items-center flex-nowrap gap-y-3'>
-        <h1 className='text-3xl sm:text-4xl font-extrabold'>Latest posts</h1>
-        <div className='flex items-center'>
+        <h1 className='text-3xl sm:text-4xl font-extrabold transition-colors duration-300 ease-in-out dark:text-zinc-200'>Latest posts</h1>
+        <div className='flex items-center transition-colors duration-300 ease-in-out dark:text-zinc-200'>
             <label htmlFor='sort' className=''>
               <ListFilter className='inline size-5 sm:size-6' />
             </label>
