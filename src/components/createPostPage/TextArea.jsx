@@ -1,7 +1,7 @@
 import { Trash } from 'lucide-react';
 import React, { useId } from 'react'
 import postBodyBlocks from '../../enums/postBodyBlocks';
-import InputErrorMessage from '../InputErrorMessage';
+import InputErrorMessage from '../commun/InputErrorMessage';
 
 const languages = [
     "bash",

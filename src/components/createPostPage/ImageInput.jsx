@@ -1,6 +1,6 @@
 import { Trash } from 'lucide-react';
 import React, { useId } from 'react'
-import InputErrorMessage from '../InputErrorMessage';
+import InputErrorMessage from '../commun/InputErrorMessage';
 
 function ImageInput({ blockData, error, deleteBlock, handleBlockChange }) {
 

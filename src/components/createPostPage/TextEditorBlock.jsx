@@ -1,7 +1,7 @@
 import { Trash } from 'lucide-react'
 import React from 'react'
 import TextEditor from './TextEditor'
-import InputErrorMessage from '../InputErrorMessage';
+import InputErrorMessage from '../commun/InputErrorMessage';
 
 function TextEditorBlock({ blockData, error, handleBlockChange, deleteBlock }) {
 

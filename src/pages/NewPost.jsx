@@ -12,7 +12,7 @@ import TextArea from '../components/createPostPage/TextArea'
 import ImageInput from '../components/createPostPage/ImageInput'
 import TextEditorBlock from '../components/createPostPage/TextEditorBlock'
 import postBodyBlocks from '../enums/postBodyBlocks'
-import InputErrorMessage from '../components/InputErrorMessage'
+import InputErrorMessage from '../components/commun/InputErrorMessage'
 import AddPostBlockButton from '../components/createPostPage/AddPostBlockButton'
 
 const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/png']; // Allowed formats
@@ -277,7 +277,7 @@ function NewPost() {
     });
 
     // console.log("postBody");
-    // console.log(postBody);
+    console.log(postBody);
 
     // console.log("headers");
     // console.log(headers);

@@ -21,9 +21,7 @@ function PostPage() {
 
                     <InteractionBar/>
 
-                    <PostDescription>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, veniam. Et consequatur unde sunt enim natus. Maiores, est illum? Aperiam sint unde fugit inventore blanditiis iusto harum ullam asperiores facere!
-                    </PostDescription>
+                    <PostDescription description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, veniam. Et consequatur unde sunt enim natus. Maiores, est illum? Aperiam sint unde fugit inventore blanditiis iusto harum ullam asperiores facere!" />
 
                     <SideMenu isItOnTheSide={false} />
                     

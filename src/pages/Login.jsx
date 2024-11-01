@@ -1,23 +1,33 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Eye, EyeOff, LockIcon, Mail, TriangleAlert, X } from 'lucide-react'
+import * as yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText'
+import TogglePassword from '../components/commun/TogglePassword'
+
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .trim()
+    .required()
+    .email(),
+  password: yup
+    .string()
+    .trim()
+    .required()
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-.,;\/#]).{8,}$/) //Password must be at least 8 characters long and include one lowercase letter, one uppercase letter, one number, and one symbol.
+});
 
 function Login() {
 
-  const [isEyeOpen, setIsEyeOpen] = useState(true);
-  const passwordInputRef = useRef(null);
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  })
 
-  const handleClick = () => {
-    if (passwordInputRef.current) {
-      if (passwordInputRef.current.type === "text") {
-        passwordInputRef.current.type = "password";
-        setIsEyeOpen(true);
-      } else {
-        passwordInputRef.current.type = "text";
-        setIsEyeOpen(false);
-      }
-    }
+  const handleFormSubmit = (data) => {
+    console.log(data);
   }
 
   return (
@@ -28,23 +38,27 @@ function Login() {
           <LogoWithText />
         </Link>
 
-        <form className='px-3 w-96 max-w-full mx-auto mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
+        <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full mx-auto mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
           <h1 className='transition-all duration-300 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>👋 Welcome back!</h1>
           <p className='transition-all duration-300 ease-in-out text-sm md:text-lg font-normal text-center text-neutral-900 dark:text-zinc-50 mb-6'>Log in to access your account</p>
 
-          {/* <div className='transition-all duration-300 ease-in-out relative flex items-center gap-x-2 bg-red-100 dark:bg-red-200 py-4 md:py-5 px-3 my-7 rounded-xl text-sm md:text-lg text-red-950 text-center font-bold'>
-            <TriangleAlert className='inline size-5 md:size-6' /> Invalid credentials!
-            <button className='absolute top-3 md:top-5 right-3'><X /></button>
-          </div> */}
+          {
+            (errors.email || errors.password)
+            &&
+            <div className='transition-all duration-300 ease-in-out relative flex items-center gap-x-2 bg-red-100 dark:bg-red-200 py-4 md:py-5 px-3 my-7 rounded-xl text-sm md:text-lg text-red-950 text-center font-bold'>
+              <TriangleAlert className='inline size-5 md:size-6' /> Invalid credentials!
+              <button className='absolute top-3 md:top-5 right-3'><X /></button>
+            </div>
+          }
 
           <div className='w-full my-4'>
             <label htmlFor="email" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Email</label>
             <div className='relative'>
               <input
                 type="email"
-                id="email"
                 placeholder='jhondoe@example.com'
                 className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                {...register('email')}
               />
               <Mail className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
             </div>
@@ -54,22 +68,14 @@ function Login() {
             <label htmlFor="password" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Password</label>
             <div className='relative'>
               <input
-                ref={passwordInputRef}
-                type="password"
                 id="password"
+                type="password"
                 placeholder='******'
                 className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                {...register('password')}
               />
               <LockIcon className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
-              <button type='button' onClick={handleClick} className='absolute top-2 md:top-3 right-3 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full p-1'>
-                {
-                  isEyeOpen
-                    ?
-                    <Eye className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
-                    :
-                    <EyeOff className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
-                }
-              </button>
+              <TogglePassword inputId="password" />
             </div>
           </div>
 

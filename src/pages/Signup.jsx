@@ -1,38 +1,47 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import logo from '../assets/img/logo.svg'
-import { AtSign, Eye, EyeOff, LockIcon, Mail, User } from 'lucide-react'
+import { AtSign, LockIcon, Mail, User } from 'lucide-react'
+import * as yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText';
+import TogglePassword from '../components/commun/TogglePassword'
+import InputErrorMessage from '../components/commun/InputErrorMessage'
+
+const schema = yup.object().shape({
+    fullName: yup
+        .string("Invalid full name")
+        .trim()
+        .required("Full name is required"),
+    username: yup
+        .string("Invalid username")
+        .trim()
+        .required("Username is required"),
+    email: yup
+        .string()
+        .trim()
+        .required("Email address is required")
+        .email("Invalid email"),
+    password: yup
+        .string()
+        .trim()
+        .required("Password is required")
+        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-.,;\/#]).{8,}$/, "Password must be at least 8 characters long and include one lowercase letter, one uppercase letter, one number, and one symbol."),
+    confirmPassword: yup
+        .string()
+        .trim()
+        .required("Password confirmation field is required")
+        .oneOf([yup.ref('password')], "Passwords must match")
+});
 
 function Signup() {
 
-    const [isEyeOpen, setIsEyeOpen] = useState(true);
-    const [isOtherEyeOpen, setIsOtherEyeOpen] = useState(true);
-    const passwordInputRef = useRef(null);
-    const confirmPasswordInputRef = useRef(null);
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+    })
 
-    const handlePassowrdClick = () => {
-        if (passwordInputRef.current) {
-            if (passwordInputRef.current.type === "text") {
-                passwordInputRef.current.type = "password";
-                setIsEyeOpen(true);
-            } else {
-                passwordInputRef.current.type = "text";
-                setIsEyeOpen(false);
-            }
-        }
-    }
-
-    const handleConfirmPassowrdClick = () => {
-        if (confirmPasswordInputRef.current) {
-            if (confirmPasswordInputRef.current.type === "text") {
-                confirmPasswordInputRef.current.type = "password";
-                setIsOtherEyeOpen(true);
-            } else {
-                confirmPasswordInputRef.current.type = "text";
-                setIsOtherEyeOpen(false);
-            }
-        }
+    const handleFormSubmit = (data) => {
+        console.log(data);
     }
 
     return (
@@ -43,97 +52,89 @@ function Signup() {
             </Link>
 
             {/* the form */}
-            <form className='px-3 w-96 max-w-full sm:px-0 sm:w-96 mx-auto mt-10 flex-grow'>
+            <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full sm:px-0 sm:w-96 mx-auto mt-10 flex-grow'>
                 <h1 className='transition-all duration-300 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>Sign up</h1>
 
                 {/* full name field */}
                 <div className='w-full my-4'>
                     <label htmlFor="fullName" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Full name</label>
-                    <div className='relative'>
+                    <div className='relative mb-1'>
                         <input
                             type="text"
                             id="fullName"
                             placeholder='Jhon Doe'
-                            className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                            className={`transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 ${errors.fullName?.message ? "focus:ring-red-500" : "dark:focus:ring-purple-600"}`}
+                            {...register("fullName")}
                         />
                         <User className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
                     </div>
+                    {errors.fullName && <InputErrorMessage message={errors.fullName.message} />}
                 </div>
 
                 {/* username field */}
                 <div className='w-full my-4'>
-                    <label htmlFor="user" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Username</label>
-                    <div className='relative'>
+                    <label htmlFor="username" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Username</label>
+                    <div className='relative mb-1'>
                         <input
-                            type="email"
-                            id="user"
+                            type="text"
+                            id="username"
                             placeholder='DJhon'
-                            className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                            className={`transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 ${errors.username?.message ? "focus:ring-red-500" : "dark:focus:ring-purple-600"}`}
+                            {...register("username")}
                         />
                         <AtSign className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
                     </div>
+                    {errors.username && <InputErrorMessage message={errors.username.message} />}
                 </div>
 
                 {/* email field */}
                 <div className='w-full my-4'>
                     <label htmlFor="email" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Email</label>
-                    <div className='relative'>
+                    <div className='relative mb-1'>
                         <input
                             type="email"
                             id="email"
                             placeholder='jhondoe@example.com'
-                            className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                            className={`transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 ${errors.email?.message ? "focus:ring-red-500" : "dark:focus:ring-purple-600"}`}
+                            {...register("email")}
                         />
                         <Mail className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
                     </div>
+                    {errors.email && <InputErrorMessage message={errors.email.message} />}
                 </div>
 
                 {/* password field */}
                 <div className='w-full my-4'>
                     <label htmlFor="password" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Password</label>
-                    <div className='relative'>
+                    <div className='relative mb-1'>
                         <input
-                            ref={passwordInputRef}
                             type="password"
                             id="password"
                             placeholder='******'
-                            className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                            className={`transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 ${errors.password?.message ? "focus:ring-red-500" : "dark:focus:ring-purple-600"}`}
+                            {...register("password")}
                         />
                         <LockIcon className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
-                        <button type='button' onClick={handlePassowrdClick} className='absolute top-2 md:top-3 right-3 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full p-1'>
-                            {
-                                isEyeOpen
-                                    ?
-                                    <Eye className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
-                                    :
-                                    <EyeOff className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
-                            }
-                        </button>
+                        <TogglePassword inputId="password" />
                     </div>
+                    {errors.password && <InputErrorMessage message={errors.password.message} />}
                 </div>
 
                 {/* password confirmation field */}
                 <div className='w-full my-4'>
                     <label htmlFor="confirmPassword" className='transition-colors duration-300 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Confirm password</label>
-                    <div className='relative'>
+                    <div className='relative mb-1'>
                         <input
-                            ref={confirmPasswordInputRef}
                             type="password"
                             id="confirmPassword"
                             placeholder='******'
-                            className='transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 dark:focus:ring-purple-600'
+                            className={`transition-colors duration-300 ease-in-out w-full bg-transparent dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-none py-2 md:py-3 px-10 md:px-12 text-base md:text-lg text-neutral-900 dark:text-zinc-50 rounded-xl focus:outline-none focus:ring-2 ${errors.confirmPassword?.message ? "focus:ring-red-500" : "dark:focus:ring-purple-600"}`}
+                            {...register("confirmPassword")}
                         />
                         <LockIcon className='size-5 md:size-6 transition-colors duration-300 ease-in-out absolute top-3 md:top-4 left-3 text-slate-500 dark:text-slate-200' />
-                        <button type='button' onClick={handleConfirmPassowrdClick} className='absolute top-2 md:top-3 right-3 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full p-1'>
-                            {
-                                isOtherEyeOpen
-                                    ?
-                                    <Eye className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
-                                    :
-                                    <EyeOff className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
-                            }
-                        </button>
+                        <TogglePassword inputId="confirmPassword" />
                     </div>
+                    {errors.confirmPassword && <InputErrorMessage message={errors.confirmPassword.message} />}
                 </div>
 
                 <div className='mt-10'>
