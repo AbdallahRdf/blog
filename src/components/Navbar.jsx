@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { Bell, BookmarkCheck, LogOut, Moon, Pencil, Search, Sun, User, UserRound } from 'lucide-react'
 import logo from '../assets/img/logo.svg'
 import darkLogo from '../assets/img/logo-dark.svg'
-import userAvatar from '../assets/img/user-avatar.svg'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeContext } from '../App'
 
@@ -67,7 +66,7 @@ function Navbar({ handleSearchClick }) {
                     </button>
 
                     {
-                        (true)
+                        (false)
                             ?
                             <>
                                 <li>
@@ -84,7 +83,7 @@ function Navbar({ handleSearchClick }) {
                             </>
                             :
                             <li>
-                                <Link to="/login" className='transition-all duration-300 ease-in-out bg-white text-slate-900 hover:bg-zinc-800 hover:text-zinc-200 hover:border-zinc-800 dark:hover:border-zinc-50 dark:hover:bg-transparent dark:hover:text-slate-50  py-2 px-5 md:py-4 md:px-6 rounded-lg border-2 text-base font-semibold'>
+                                <Link to="/auth/login" className='transition-all duration-300 ease-in-out bg-white text-slate-900 hover:bg-zinc-800 hover:text-zinc-200 hover:border-zinc-800 dark:hover:border-zinc-50 dark:hover:bg-transparent dark:hover:text-slate-50  py-2 px-5 md:py-4 md:px-6 rounded-lg border-2 text-base font-semibold'>
                                     LogIn
                                 </Link>
                             </li>

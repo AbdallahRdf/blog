@@ -1,12 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { AtSign, LockIcon, Mail, User } from 'lucide-react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AtSign, LockIcon, Mail, TriangleAlert, User, X } from 'lucide-react'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText';
 import TogglePassword from '../components/commun/TogglePassword'
 import InputErrorMessage from '../components/commun/InputErrorMessage'
+import customAxios from '../axios/customAxios'
+import FormAlert from '../components/commun/FormAlert'
 
 const schema = yup.object().shape({
     fullName: yup
@@ -36,24 +38,50 @@ const schema = yup.object().shape({
 
 function Signup() {
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const navigator = useNavigate();
+
+    const [showAlert, setShowAlert] = useState(false);
+
+    const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(schema)
     })
 
-    const handleFormSubmit = (data) => {
-        console.log(data);
+    const handleFormSubmit = async (data) => {
+        delete data.confirmPassword;
+
+        try {
+            // if request succeeded, a verification email is sent;
+            await customAxios.post(`/auth/register`, data);
+            navigator('/auth/account-activation');
+
+        } catch (error) {
+            // input validation failed on the server, show error messages
+            if (error.response.status === 400) {
+                const errorMessages = error.response.data.errorMessages;
+                Object.keys(errorMessages).forEach(field => setError(field, { message: errorMessages[field] }));
+            } else {
+                // server error occured
+                setShowAlert(true);
+            }
+        }
     }
 
     return (
         <div className='flex flex-col min-h-screen'>
             {/* the logo */}
-            <Link to="/" className='flex items-center ms-4 mt-3 w-fit'>
+            <Link to="/" className='hidden md:flex items-center ms-4 mt-3 w-fit'>
                 <LogoWithText />
             </Link>
 
             {/* the form */}
             <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full sm:px-0 sm:w-96 mx-auto mt-10 flex-grow'>
                 <h1 className='transition-all duration-300 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>Sign up</h1>
+
+                {
+                    showAlert
+                    &&
+                    <FormAlert boldMessage="Server Error!" normalMessage="Try Later" setShowAlert={setShowAlert} />
+                }
 
                 {/* full name field */}
                 <div className='w-full my-4'>
@@ -146,7 +174,7 @@ function Signup() {
                 </div>
 
                 <hr className='transition-colors duration-300 ease-in-out border-slate-300 dark:border-slate-800 my-5' />
-                <p className='transition-colors duration-300 ease-in-out text-center text-slate-600 dark:text-slate-400'>Already have an account?<Link to="/login" className='transition-colors duration-300 ease-in-out text-zinc-950 dark:text-slate-50 underline hover:no-underline ps-2'>Sing in</Link></p>
+                <p className='transition-colors duration-300 ease-in-out text-center text-slate-600 dark:text-slate-400'>Already have an account?<Link to="/auth/login" className='transition-colors duration-300 ease-in-out text-zinc-950 dark:text-slate-50 underline hover:no-underline ps-2'>Sing in</Link></p>
             </form>
 
             {/* footer */}

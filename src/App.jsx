@@ -1,3 +1,4 @@
+import { createContext } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import UserHomePage from "./pages/UserHomePage";
@@ -8,7 +9,8 @@ import Signup from "./pages/Signup";
 import UsersList from "./pages/UsersList";
 import NewPost from "./pages/NewPost";
 import useDarkMode from "./hooks/useDarkMode";
-import { createContext } from "react";
+import AccountActivation from './pages/AccountActivation'
+import WaitAccountActivation from "./pages/WaitAccountActivation";
 
 export const ThemeContext = createContext({});
 
@@ -22,12 +24,14 @@ export default function App() {
           <Route path="/" element={<Layout />}>
             {/* <Route index element={<UserHomePage />} /> */}
             <Route index element={<AdminHomePage />} />
-            <Route path="posts" element={<UserHomePage />} />
-            <Route path="post" element={<PostPage />} />
+            <Route path="auth/login" element={<Login />} />
+            <Route path="auth/register" element={<Signup />} />
+            <Route path="auth/account-activation" element={<WaitAccountActivation />} />
+            <Route path="auth/account-activation/:token" element={<AccountActivation />} />
             <Route path="users" element={<UsersList />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
             <Route path="posts/new" element={<NewPost />} />
+            <Route path="post" element={<PostPage />} />
+            <Route path="posts" element={<UserHomePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

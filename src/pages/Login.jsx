@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Eye, EyeOff, LockIcon, Mail, TriangleAlert, X } from 'lucide-react'
+import { LockIcon, Mail, TriangleAlert, X } from 'lucide-react'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText'
 import TogglePassword from '../components/commun/TogglePassword'
+import FormAlert from '../components/commun/FormAlert'
 
 const schema = yup.object().shape({
   email: yup
@@ -34,21 +34,18 @@ function Login() {
     <>
       <div className="flex flex-col min-h-screen">
 
-        <Link to="/" className='flex items-center ms-4 mt-3 w-fit'>
+        <Link to="/" className='hidden md:flex items-center ms-4 mt-3 w-fit'>
           <LogoWithText />
         </Link>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full mx-auto mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
+        <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full mx-auto mt-28 md:mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
           <h1 className='transition-all duration-300 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>👋 Welcome back!</h1>
           <p className='transition-all duration-300 ease-in-out text-sm md:text-lg font-normal text-center text-neutral-900 dark:text-zinc-50 mb-6'>Log in to access your account</p>
 
           {
             (errors.email || errors.password)
             &&
-            <div className='transition-all duration-300 ease-in-out relative flex items-center gap-x-2 bg-red-100 dark:bg-red-200 py-4 md:py-5 px-3 my-7 rounded-xl text-sm md:text-lg text-red-950 text-center font-bold'>
-              <TriangleAlert className='inline size-5 md:size-6' /> Invalid credentials!
-              <button className='absolute top-3 md:top-5 right-3'><X /></button>
-            </div>
+            <FormAlert boldMessage="Invalid credentials!" />
           }
 
           <div className='w-full my-4'>
@@ -80,7 +77,7 @@ function Login() {
           </div>
 
           <div className='w-full flex justify-between items-center px-2 mt-8'>
-            <Link to="/forgot-password" className='transition-colors duration-300 ease-in-out text-slate-600 dark:text-slate-300 hover:underline'>Forgot password?</Link>
+            <Link to="/auth/forgot-password" className='transition-colors duration-300 ease-in-out text-slate-600 dark:text-slate-300 hover:underline'>Forgot password?</Link>
             <input
               type="submit"
               value="Log in"
@@ -89,7 +86,7 @@ function Login() {
           </div>
 
           <hr className='transition-colors duration-300 ease-in-out border-slate-300 dark:border-slate-800 my-5' />
-          <p className='transition-colors duration-300 ease-in-out text-center text-slate-600 dark:text-slate-400'>Don't have an account?<Link to="/signup" className='transition-colors duration-300 ease-in-out text-zinc-950 dark:text-slate-50 underline hover:no-underline ps-2'>Signup</Link></p>
+          <p className='transition-colors duration-300 ease-in-out text-center text-slate-600 dark:text-slate-400'>Don't have an account?<Link to="/auth/register" className='transition-colors duration-300 ease-in-out text-zinc-950 dark:text-slate-50 underline hover:no-underline ps-2'>Signup</Link></p>
         </form>
         <div className='transition-colors duration-300 ease-in-out text-slate-500 text-sm text-center w-full pb-3 mt-20 sm:absolute sm:bottom-2 sm:right-1/2 sm:translate-x-1/2'>
           Radfi Abdallah © 2024 | All rights reserved.
