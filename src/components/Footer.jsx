@@ -4,7 +4,7 @@ import githubLogoDark from '../assets/img/github-logo-dark.svg'
 import linkedinLogo from '../assets/img/linkedin-logo.svg'
 import linkedinLogoDark from '../assets/img/linkedin-logo-dark.svg'
 import { Link } from 'react-router-dom'
-import { ThemeContext } from '../App'
+import { ThemeContext } from '../context/contexts'
 import LogoWithText from './LogoWithText'
 
 function Footer() {

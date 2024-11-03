@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bell, BookmarkCheck, LogOut, Moon, Pencil, Search, Sun, User, UserRound } from 'lucide-react'
+import { Bell, Moon, Search, Sun, User } from 'lucide-react'
 import logo from '../assets/img/logo.svg'
 import darkLogo from '../assets/img/logo-dark.svg'
-import { AnimatePresence, motion } from 'framer-motion'
-import { ThemeContext } from '../App'
+import { AnimatePresence } from 'framer-motion'
+import { AuthContext, ThemeContext } from '../context/contexts'
+import UserDropDown from './UserDropDown'
 
 function Navbar({ handleSearchClick }) {
 
     const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
+    const { accessToken, user } = useContext(AuthContext);
 
     const [showDropDown, setShowDropDown] = useState(false);
     const UserAvatarBtnRef = useRef(null);
@@ -35,7 +37,7 @@ function Navbar({ handleSearchClick }) {
             <nav className='transition-all duration-300 ease-in-out bg-zinc-50 fixed dark:bg-transparent top-4 w-full xl:w-[1280px] rounded-xl mx-auto z-50'>
                 <div className='transition-all duration-300 ease-in-out dark:backdrop-blur-2xl dark:brightness-150 z-40 absolute inset-0 rounded-xl'></div>
                 <ul className='rounded-xl px-4 py-1 sm:py-3 flex items-center gap-3 sm:gap-6 relative z-50'>
-                    
+
                     {/* Logo */}
                     <li className='grow'>
                         <Link to="/">
@@ -66,7 +68,7 @@ function Navbar({ handleSearchClick }) {
                     </button>
 
                     {
-                        (false)
+                        (accessToken)
                             ?
                             <>
                                 <li>
@@ -76,8 +78,14 @@ function Navbar({ handleSearchClick }) {
                                 </li>
                                 <li>
                                     <button ref={UserAvatarBtnRef} onClick={handleClick} className='transition-all duration-300 ease-in-out dark:hover:scale-125 hover:bg-zinc-200 dark:hover:bg-transparent rounded-full p-2 text-black dark:text-zinc-50'>
-                                        <User className='size-6 sm:size-7' />
-                                        {/* <img src={userAvatar} alt="user avatar" className='size-7 sm:size-8 fill-black' /> */}
+                                        {
+                                            user.profileImage
+                                                ?
+                                                <User className='size-6 sm:size-7' />
+                                                // <img src={userAvatar} alt="user avatar" className='size-7 sm:size-8 fill-black' />
+                                                :
+                                                <User className='size-6 sm:size-7' />
+                                        }
                                     </button>
                                 </li>
                             </>
@@ -94,32 +102,7 @@ function Navbar({ handleSearchClick }) {
                     {
                         showDropDown
                         &&
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.1 }}
-                            className='bg-zinc-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-400 border border-zinc-300 dark:border-zinc-700 rounded-2xl w-52 sm:w-60 pt-4 flex flex-col overflow-hidden absolute right-2'
-                        >
-                            <div className='ps-3 pb-2'>
-                                <User className='size-12 sm:size-16 border rounded-xl mb-2' />
-                                {/* <img src={userAvatar} alt="user avatar" className='size-12 sm:size-16 border rounded-xl mb-2' /> */}
-                                <p className='text-lg sm:text-xl font-semibold'>Abdallah Radfi</p>
-                                <p className='text-base sm:text-lg'>@radfi</p>
-                            </div>
-                            <Link to="/profile" className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'>
-                                <UserRound className='inline size-5 sm:size-6' /> Profile
-                            </Link >
-                            <Link to="/saved" className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'>
-                                <BookmarkCheck className='inline size-5 sm:size-6' /> Saved posts
-                            </Link >
-                            <Link to="/posts/new" className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'>
-                                <Pencil className='inline size-5 sm:size-6' /> Create new post
-                            </Link >
-                            <Link to="/logout" className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'>
-                                <LogOut className='inline size-5 sm:size-6' /> Log out
-                            </Link>
-                        </motion.div>
+                        <UserDropDown />
                     }
                 </AnimatePresence>
             </nav>

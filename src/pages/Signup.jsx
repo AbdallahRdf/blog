@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AtSign, LockIcon, Mail, TriangleAlert, User, X } from 'lucide-react'
+import { AtSign, LoaderCircle, LockIcon, Mail, User } from 'lucide-react'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -30,9 +30,7 @@ const schema = yup.object().shape({
         .required("Password is required")
         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-.,;\/#]).{8,}$/, "Password must be at least 8 characters long and include one lowercase letter, one uppercase letter, one number, and one symbol."),
     confirmPassword: yup
-        .string()
-        .trim()
-        .required("Password confirmation field is required")
+        .mixed()
         .oneOf([yup.ref('password')], "Passwords must match")
 });
 
@@ -42,7 +40,7 @@ function Signup() {
 
     const [showAlert, setShowAlert] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, setError } = useForm({
+    const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
         resolver: yupResolver(schema)
     })
 
@@ -52,7 +50,7 @@ function Signup() {
         try {
             // if request succeeded, a verification email is sent;
             await customAxios.post(`/auth/register`, data);
-            navigator('/auth/account-activation');
+            navigator('/auth/account-activation', { state: { email: data.email } });
 
         } catch (error) {
             // input validation failed on the server, show error messages
@@ -166,11 +164,18 @@ function Signup() {
                 </div>
 
                 <div className='mt-10'>
-                    <input
-                        type="submit"
-                        value="Sign up"
-                        className='w-full transition-colors duration-300 ease-in-out bg-purple-500 hover:bg-purple-400 dark:bg-purple-700 dark:hover:bg-purple-600 text-zinc-100 py-2 px-8 md:px-12 font-bold rounded-xl cursor-pointer'
-                    />
+                    <button
+                        disabled={isSubmitting}
+                        type='submit'
+                        className={`w-full transition-colors duration-300 ease-in-out ${isSubmitting ? "bg-purple-400 dark:bg-purple-600 cursor-wait" : "bg-purple-500 dark:bg-purple-700 cursor-pointer"} hover:bg-purple-400 dark:hover:bg-purple-600 text-zinc-100 flex justify-center py-2 px-8 md:px-12 font-bold rounded-xl`}
+                    >
+                        {isSubmitting
+                            ?
+                            <LoaderCircle className='animate-spin' />
+                            :
+                            "Sign up"
+                        }
+                    </button>
                 </div>
 
                 <hr className='transition-colors duration-300 ease-in-out border-slate-300 dark:border-slate-800 my-5' />

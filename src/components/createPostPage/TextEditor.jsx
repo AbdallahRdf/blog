@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { ThemeContext } from '../../App';
+import { ThemeContext } from '../../context/contexts';
 
 const TextEditor = ({ content, handleEditorChange }) => {
 

@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom'
-import { LockIcon, Mail, TriangleAlert, X } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Info, LoaderCircle, LockIcon, Mail, X } from 'lucide-react'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText'
 import TogglePassword from '../components/commun/TogglePassword'
 import FormAlert from '../components/commun/FormAlert'
+import customAxios from '../axios/customAxios'
+import { useContext, useState } from 'react'
+import { AuthContext } from '../context/contexts'
 
 const schema = yup.object().shape({
   email: yup
@@ -22,13 +25,45 @@ const schema = yup.object().shape({
 
 function Login() {
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  })
+  const navigator = useNavigate();
 
-  const handleFormSubmit = (data) => {
-    console.log(data);
+  const { setAccessToken, accessToken } = useContext(AuthContext);
+
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, getValues } = useForm({
+    resolver: yupResolver(schema)
+  })  
+
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showInfoAlert, setShowInfoAlert] = useState(false);
+
+  const handleFormSubmit = async (data) => {
+    try {
+      const response = await customAxios.post('/auth/login', data);
+      setAccessToken(response.data.accessToken);
+      navigator('/');
+    } catch (error) {
+      if (error.response.status === 400) { // invalid credentials
+        setShowErrorAlert(true);
+      } else if (error.response.status === 403) { // account is not activated, need to check email.
+        setShowInfoAlert(true);
+        setShowErrorAlert(false);
+      } else {
+        navigator(`/internal-server-error`, {
+          state: {
+            statusCode: error.response.status,
+            message: 'Server Error'
+          }
+        });
+      }
+    }
   }
+
+  const handleClick = () => navigator('/auth/account-activation', {
+    state: {
+      email: getValues("email"),
+      sendEmailOnLoad: true
+    }
+  });
 
   return (
     <>
@@ -38,12 +73,34 @@ function Login() {
           <LogoWithText />
         </Link>
 
+        {
+          showInfoAlert
+          &&
+          <div className='w-full md:w-11/12 lg:w-3/4 transition-all duration-300 ease-in-out flex items-center justify-between gap-x-6 bg-cyan-100 dark:bg-cyan-200 py-4 md:py-5 px-3 my-7 rounded-xl text-sm md:text-lg text-cyan-700 dark:text-cyan-950 border-s-4 border-s-cyan-700 dark:border-none absolute top-0 right-0'>
+            <div className='flex items-center gap-x-2'>
+              <Info className='hidden md:inline-block' />
+              <div>
+                You need to activate your account to log in, check your email for instructions.
+                <button
+                  onClick={handleClick}
+                  className='ms-1 underline hover:no-underline'
+                >
+                  Resend Email
+                </button>
+              </div>
+            </div>
+            <button onClick={() => setShowInfoAlert(false)}>
+              <X />
+            </button>
+          </div>
+        }
+
         <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full mx-auto mt-28 md:mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
           <h1 className='transition-all duration-300 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>👋 Welcome back!</h1>
           <p className='transition-all duration-300 ease-in-out text-sm md:text-lg font-normal text-center text-neutral-900 dark:text-zinc-50 mb-6'>Log in to access your account</p>
 
           {
-            (errors.email || errors.password)
+            (errors.email || errors.password || showErrorAlert)
             &&
             <FormAlert boldMessage="Invalid credentials!" />
           }
@@ -78,11 +135,18 @@ function Login() {
 
           <div className='w-full flex justify-between items-center px-2 mt-8'>
             <Link to="/auth/forgot-password" className='transition-colors duration-300 ease-in-out text-slate-600 dark:text-slate-300 hover:underline'>Forgot password?</Link>
-            <input
-              type="submit"
-              value="Log in"
-              className='transition-colors duration-300 ease-in-out bg-purple-500 hover:bg-purple-400 dark:bg-purple-700 dark:hover:bg-purple-600 text-zinc-100 py-2 px-8 md:px-12 font-bold rounded-xl cursor-pointer'
-            />
+            <button
+              disabled={isSubmitting}
+              type='submit'
+              className={`transition-colors duration-300 ease-in-out ${isSubmitting ? "bg-purple-400 dark:bg-purple-600 cursor-wait" : "bg-purple-500 dark:bg-purple-700 cursor-pointer"} hover:bg-purple-400 dark:hover:bg-purple-600 text-zinc-100 flex justify-center py-2 px-8 md:px-12 font-bold rounded-xl`}
+            >
+              {isSubmitting
+                ?
+                <LoaderCircle className='animate-spin' />
+                :
+                "Log in"
+              }
+            </button>
           </div>
 
           <hr className='transition-colors duration-300 ease-in-out border-slate-300 dark:border-slate-800 my-5' />

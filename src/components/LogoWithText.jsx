@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import logo from '../assets/img/logo.svg'
 import darkLogo from '../assets/img/logo-dark.svg'
-import { ThemeContext } from '../App';
+import { ThemeContext } from '../context/contexts';
 
 function LogoWithText() {
     const { isDarkMode } = useContext(ThemeContext);

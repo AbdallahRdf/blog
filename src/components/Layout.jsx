@@ -6,10 +6,10 @@ import { Search } from 'lucide-react';
 
 function Layout() {
 
-    // the page where the navebar and the footer should not be shown
-    const paths = ['/auth/login', '/auth/register', '/auth/account-activation']
+    // the page where the navebar and the footer should be shown
+    const paths = ['/', '/post', '/posts', '/post/new', '/users'];
 
-    const { pathname } = useLocation();
+    const { pathname } = useLocation();    
 
     const [showSearchBlock, setShowSearchBlock] = useState(false);
 
@@ -34,7 +34,7 @@ function Layout() {
     return (
         <div className='transition-all duration-300 ease-in-out bg-zinc-50 dark:bg-zinc-950'>
             {
-                (!paths.includes(pathname))
+                (paths.includes(pathname))
                     ?
                     <div className='flex flex-col min-h-screen w-full'>
                         <div className='w-full xl:w-[1280px] mx-auto relative flex-1'>
