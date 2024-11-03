@@ -3,10 +3,12 @@ import { BookmarkCheck, LogOut, Pencil, User, UserRound } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { AuthContext } from '../context/contexts';
-import customAxios from '../axios/customAxios';
+import useCustomAxios from '../hooks/useCustomAxios';
 
 
 function UserDropDown() {
+
+    const customAxios = useCustomAxios();
 
     const { user, setUser, setAccessToken } = useContext(AuthContext);
 
@@ -20,12 +22,12 @@ function UserDropDown() {
             navigator('/');
         } catch (error) {
             let message = "Server Error";
-            if (error.response.status < 500) {
+            if (error.response?.status < 500) {
                 message = error.response.data.message;
             }
             navigator(`/${message.split(' ').join('-')}`, {
                 state: {
-                    statusCode: error.response.status,
+                    statusCode: error.response?.status || 500,
                     message
                 }
             })

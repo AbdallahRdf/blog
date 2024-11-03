@@ -1,8 +1,8 @@
 import { Mail, MailCheck, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import customAxios from '../axios/customAxios';
 import LoadingPage from '../components/commun/LoadingPage';
+import useCustomAxios from '../hooks/useCustomAxios';
 
 function WaitAccountActivation() {
 
@@ -14,6 +14,8 @@ function WaitAccountActivation() {
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [show, setShow] = useState(false);
+
+  const customAxios = useCustomAxios();
 
   useEffect(() => {
     setTimeout(() => setIsDisabled(false), 5 * 60 * 1000) // disable the send button for 5 minutes

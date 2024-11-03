@@ -7,8 +7,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText';
 import TogglePassword from '../components/commun/TogglePassword'
 import InputErrorMessage from '../components/commun/InputErrorMessage'
-import customAxios from '../axios/customAxios'
 import FormAlert from '../components/commun/FormAlert'
+import useCustomAxios from '../hooks/useCustomAxios'
 
 const schema = yup.object().shape({
     fullName: yup
@@ -37,6 +37,8 @@ const schema = yup.object().shape({
 function Signup() {
 
     const navigator = useNavigate();
+
+    const customAxios = useCustomAxios();
 
     const [showAlert, setShowAlert] = useState(false);
 

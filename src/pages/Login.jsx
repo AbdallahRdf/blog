@@ -6,9 +6,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText'
 import TogglePassword from '../components/commun/TogglePassword'
 import FormAlert from '../components/commun/FormAlert'
-import customAxios from '../axios/customAxios'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../context/contexts'
+import useCustomAxios from '../hooks/useCustomAxios'
 
 const schema = yup.object().shape({
   email: yup
@@ -26,8 +26,10 @@ const schema = yup.object().shape({
 function Login() {
 
   const navigator = useNavigate();
+  
+  const customAxios = useCustomAxios();
 
-  const { setAccessToken, accessToken } = useContext(AuthContext);
+  const { setAccessToken } = useContext(AuthContext);
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError, getValues } = useForm({
     resolver: yupResolver(schema)

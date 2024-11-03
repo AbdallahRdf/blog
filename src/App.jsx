@@ -14,13 +14,13 @@ import LoadingPage from './components/commun/LoadingPage'
 import WaitAccountActivation from "./pages/WaitAccountActivation";
 import ErrorPage from './pages/ErrorPage';
 import userRoles from './enums/userRoles';
-import customAxios from "./axios/customAxios";
 import { AuthContext, ThemeContext } from "./context/contexts";
+import useCustomAxios from "./hooks/useCustomAxios";
 
 export default function App() {
 
   const [isDarkMode, setIsDarkMode] = useDarkMode();
-
+  const customAxios = useCustomAxios();
   const [accessToken, setAccessToken] = useState(undefined);
   const [user, setUser] = useState(undefined);
 
@@ -60,9 +60,13 @@ export default function App() {
               <Route path="/" element={<Layout />}>
 
                 {
-                  user?.role !== userRoles.USER // if admin or moderator
+                  (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
                     ?
-                    <Route index element={<AdminHomePage />} />
+                    <>
+                      <Route path="users" element={<UsersList />} />
+                      <Route path="posts/new" element={<NewPost />} />
+                      <Route index element={<AdminHomePage />} />
+                    </>
                     :
                     <Route index element={<UserHomePage />} />
                 }
@@ -78,8 +82,6 @@ export default function App() {
                   </>
                 }
 
-                <Route path="users" element={<UsersList />} />
-                <Route path="posts/new" element={<NewPost />} />
                 <Route path="post" element={<PostPage />} />
                 <Route path="posts" element={<UserHomePage />} />
 
