@@ -44,7 +44,7 @@ const languages = [
     "yaml"
 ];
 
-function TextArea({ blockData, error, deleteBlock, handleBlockChange, handleLanguageChange }) {
+function TextArea({ blockData, error, handleDeleteBlock, handleBlockChange, handleLanguageChange }) {
 
     const { id, type, value, language } = blockData;
 
@@ -59,7 +59,7 @@ function TextArea({ blockData, error, deleteBlock, handleBlockChange, handleLang
             id={id}
             className='flex flex-col my-6 px-3 relative'
         >
-            <div className='transition-colors duration-300 ease-in-out bg-neutral-200 dark:bg-zinc-800 rounded-xl pt-3 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-500 dark:hover:border-zinc-400'>
+            <div className='transition-colors duration-300 ease-in-out bg-neutral-200 dark:bg-zinc-800 rounded-lg pt-3 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-500 dark:hover:border-zinc-400'>
 
                 {
                     type === postBodyBlocks.CODE_SNIPPET
@@ -79,7 +79,7 @@ function TextArea({ blockData, error, deleteBlock, handleBlockChange, handleLang
 
                 <button
                     type='button'
-                    onClick={deleteBlock}
+                    onClick={handleDeleteBlock}
                     title='Delete Block'
                     className='transition-colors duration-300 ease-in-out absolute top-1 right-4 text-zinc-700 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-600 p-2 rounded-full'
                 >

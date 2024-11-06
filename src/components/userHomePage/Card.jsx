@@ -6,7 +6,7 @@ import { Calendar } from 'lucide-react'
 
 function Card() {
   return (
-    <div className='w-auto border border-slate-300 dark:border-slate-700 p-3 rounded-2xl hover:border-slate-800 dark:hover:border-slate-200 transition-colors ease-in-out duration-300'>
+    <div className='w-auto border border-slate-300 dark:border-slate-700 p-3 pb-2 rounded-2xl hover:border-slate-800 dark:hover:border-slate-200 transition-colors ease-in-out duration-300'>
       <Link to="/post">
         <h3 className='font-bold text-xl sm:text-3xl my-4 text-zinc-900 dark:text-zinc-100 transition-colors ease-in-out duration-300'>This is 2025, let's wrap up this sh*t</h3>
 

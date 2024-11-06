@@ -23,7 +23,6 @@ function Navbar({ handleSearchClick }) {
     useEffect(() => {
         const handleWindowClick = (e) => {
             if (showDropDown && UserAvatarBtnRef.current && e.target !== UserAvatarBtnRef.current) {
-                console.log("done")
                 setShowDropDown(false);
             }
         }
@@ -79,7 +78,7 @@ function Navbar({ handleSearchClick }) {
                                 <li>
                                     <button ref={UserAvatarBtnRef} onClick={handleClick} className='transition-all duration-300 ease-in-out dark:hover:scale-125 hover:bg-zinc-200 dark:hover:bg-transparent rounded-full p-2 text-black dark:text-zinc-50'>
                                         {
-                                            user.profileImage
+                                            user?.profileImage
                                                 ?
                                                 <User className='size-6 sm:size-7' />
                                                 // <img src={userAvatar} alt="user avatar" className='size-7 sm:size-8 fill-black' />

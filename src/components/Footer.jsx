@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { ThemeContext } from '../context/contexts'
 import LogoWithText from './LogoWithText'
 
-function Footer() {
+function Footer() {    
 
     const { isDarkMode } = useContext(ThemeContext);
 

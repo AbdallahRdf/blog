@@ -20,7 +20,9 @@ import useCustomAxios from "./hooks/useCustomAxios";
 export default function App() {
 
   const [isDarkMode, setIsDarkMode] = useDarkMode();
+
   const customAxios = useCustomAxios();
+
   const [accessToken, setAccessToken] = useState(undefined);
   const [user, setUser] = useState(undefined);
 
@@ -63,9 +65,10 @@ export default function App() {
                   (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
                     ?
                     <>
+                      <Route index element={<AdminHomePage />} />
                       <Route path="users" element={<UsersList />} />
                       <Route path="posts/new" element={<NewPost />} />
-                      <Route index element={<AdminHomePage />} />
+                      <Route path="posts" element={<UserHomePage />} />
                     </>
                     :
                     <Route index element={<UserHomePage />} />
@@ -82,8 +85,8 @@ export default function App() {
                   </>
                 }
 
-                <Route path="post" element={<PostPage />} />
                 <Route path="posts" element={<UserHomePage />} />
+                <Route path="post" element={<PostPage />} />
 
                 <Route path="*" element={<ErrorPage />} />
               </Route>

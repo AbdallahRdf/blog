@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
-import { BookmarkCheck, LogOut, Pencil, User, UserRound } from 'lucide-react'
+import { BookmarkCheck, LogOut, Pencil, User, UserRound, Users } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { AuthContext } from '../context/contexts';
 import useCustomAxios from '../hooks/useCustomAxios';
+import userRoles from '../enums/userRoles';
 
 
 function UserDropDown() {
@@ -17,21 +18,19 @@ function UserDropDown() {
     const logout = async () => {
         try {
             await customAxios.post('/auth/logout');
-            setAccessToken(null);
-            setUser(null);
-            navigator('/');
         } catch (error) {
-            let message = "Server Error";
-            if (error.response?.status < 500) {
-                message = error.response.data.message;
+            if (error.response?.status >= 500) {
+                navigator(`/internal-server-error`, {
+                    state: {
+                        statusCode: error.response?.status || 500,
+                        message: "Server Error"
+                    }
+                })
             }
-            navigator(`/${message.split(' ').join('-')}`, {
-                state: {
-                    statusCode: error.response?.status || 500,
-                    message
-                }
-            })
         }
+        setAccessToken(null);
+        setUser(null);
+        navigator('/');
     }
 
     return (
@@ -44,15 +43,15 @@ function UserDropDown() {
         >
             <div className='ps-3 pb-2'>
                 {
-                    user.profileCover
+                    user?.profileCover
                         ?
                         <User className='size-12 sm:size-16 border rounded-xl mb-2' />
                         /* <img src={userAvatar} alt="user avatar" className='size-12 sm:size-16 border rounded-xl mb-2' /> */
                         :
                         <User className='size-12 sm:size-16 border rounded-xl mb-2' />
                 }
-                <p className='text-lg sm:text-xl font-semibold'>{user.fullName}</p>
-                <p className='text-base sm:text-lg'>{user.username}</p>
+                <p className='text-lg sm:text-xl font-semibold'>{user?.fullName}</p>
+                <p className='text-base sm:text-lg'>{user?.username}</p>
             </div>
 
             <Link
@@ -69,12 +68,24 @@ function UserDropDown() {
                 <BookmarkCheck className='inline size-5 sm:size-6' /> Saved posts
             </Link >
 
-            <Link
-                to="/posts/new"
-                className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
-            >
-                <Pencil className='inline size-5 sm:size-6' /> Create new post
-            </Link >
+            {
+                (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
+                &&
+                <>
+                    <Link
+                        to="/posts/new"
+                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                    >
+                        <Pencil className='inline size-5 sm:size-6' /> Create new post
+                    </Link >
+                    <Link
+                        to="/posts/new"
+                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                    >
+                        <Users className='inline size-5 sm:size-6' /> Users
+                    </Link >
+                </>
+            }
 
             <button
                 onClick={logout}

@@ -3,7 +3,7 @@ import React from 'react'
 import TextEditor from './TextEditor'
 import InputErrorMessage from '../commun/InputErrorMessage';
 
-function TextEditorBlock({ blockData, error, handleBlockChange, deleteBlock }) {
+function TextEditorBlock({ blockData, error, handleBlockChange, handleDeleteBlock }) {
 
     const { id, value } = blockData;
 
@@ -11,7 +11,7 @@ function TextEditorBlock({ blockData, error, handleBlockChange, deleteBlock }) {
 
     return (
         <div id={id} className='relative mt-9 mx-3'>
-            <button type='button' onClick={deleteBlock} title='Delete Block' className='absolute z-10 top-1 right-4 text-zinc-700 hover:text-zinc-900 hover:bg-zinc-200 p-2 rounded-full'>
+            <button type='button' onClick={handleDeleteBlock} title='Delete Block' className='absolute z-10 top-1 right-4 text-zinc-700 hover:text-zinc-900 hover:bg-zinc-200 p-2 rounded-full'>
                 <Trash />
             </button>
             <TextEditor content={value} handleEditorChange={handleChange} />

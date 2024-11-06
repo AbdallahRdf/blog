@@ -1,26 +1,22 @@
 import { TableOfContents, User } from 'lucide-react'
 import React, { useEffect } from 'react'
 import PostTag from './PostTag'
-import userAvatar from '../../assets/img/user-avatar.svg'
 
 function SideMenu({ headers, tags, isItOnTheSide = true }) {
-    const tagsToShow = tags
-        .split(' ')
-        .filter(tag => tag.trim() !== "")
-        .map((tag, index) => <PostTag key={index} tag={tag} />);
+    const tagsToShow = tags.map((tag, index) => <PostTag key={index} tag={tag} />);
 
     const headersToShow = headers.map(header => {
         if (header.type === "H2") {
             return (
                 <li key={header.id}>
-                    <a href={`#${header.id}`} className="inline-block hover:underline mb-1">{header.content}</a>
+                    <a href={`#${header.id}`} className="inline-block hover:underline mb-1">{header.value}</a>
                 </li>
             )
         }
         return (
             <ul className='list-dis' key={header.id}>
                 <li className='ms-6'>
-                    <a href={`#${header.id}`} className="inline-block hover:underline mb-1">{header.content}</a>
+                    <a href={`#${header.id}`} className="inline-block hover:underline mb-1">{header.value}</a>
                 </li>
             </ul>
         )

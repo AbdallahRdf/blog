@@ -10,8 +10,12 @@ import { ArrowBigLeft } from 'lucide-react'
 
 function Preview({ setShowPreviewMode, formValues: { title, cover, description, tags, content }, postBody, headers }) {
 
+    const tagsArray = tags
+        .split(' ')
+        .filter(tag => tag.trim() !== "");
+
     return (
-        <div className='w-full xl:w-[1280px] mx-auto mt-32 mb-24 px-2 scroll-smooth'>
+        <div className='w-full xl:w-[1280px] mx-auto pt-32 pb-24 px-2 scroll-smooth'>
             <PostTitle>{title}</PostTitle>
 
             <PostPublishDate>FEB 10, 2024</PostPublishDate>
@@ -24,11 +28,11 @@ function Preview({ setShowPreviewMode, formValues: { title, cover, description, 
 
                     <PostDescription description={description} />
 
-                    <SideMenu headers={headers} tags={tags} isItOnTheSide={false} />
+                    <SideMenu headers={headers} tags={tagsArray} isItOnTheSide={false} />
 
                     <PostBody content={content} postBody={postBody} />
                 </div>
-                <SideMenu headers={headers} tags={tags} />
+                <SideMenu headers={headers} tags={tagsArray} />
             </div>
             <button
                 title='Back'

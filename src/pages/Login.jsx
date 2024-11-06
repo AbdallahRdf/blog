@@ -26,14 +26,14 @@ const schema = yup.object().shape({
 function Login() {
 
   const navigator = useNavigate();
-  
+
   const customAxios = useCustomAxios();
 
-  const { setAccessToken } = useContext(AuthContext);
+  const { setAccessToken, setUser } = useContext(AuthContext);
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError, getValues } = useForm({
     resolver: yupResolver(schema)
-  })  
+  })
 
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showInfoAlert, setShowInfoAlert] = useState(false);
@@ -41,7 +41,14 @@ function Login() {
   const handleFormSubmit = async (data) => {
     try {
       const response = await customAxios.post('/auth/login', data);
-      setAccessToken(response.data.accessToken);
+
+      const token = response.data.accessToken;
+      const jwtBodyBase64 = token.split('.')[1];
+      const jwtBody = JSON.parse(atob(jwtBodyBase64));
+
+      setAccessToken(token);
+      setUser(jwtBody);
+      
       navigator('/');
     } catch (error) {
       if (error.response.status === 400) { // invalid credentials
