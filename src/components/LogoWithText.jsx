@@ -9,7 +9,7 @@ function LogoWithText() {
     return (
         <>
             <img src={isDarkMode ? logo : darkLogo} alt="Logo" />
-            <span className='transition-colors duration-300 ease-in-out text-4xl font-bold text-neutral-900 dark:text-zinc-50'>Blog</span>
+            <span className='transition-colors duration-500 ease-in-out text-4xl font-bold text-neutral-900 dark:text-zinc-50'>Blog</span>
         </>
     )
 }

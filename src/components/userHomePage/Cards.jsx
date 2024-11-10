@@ -1,18 +1,12 @@
 import React from 'react'
 import Card from './Card'
 
-function Cards() {
+function Cards({ posts }) {  
+  const cards = posts.map((post, index) => <Card key={post._id} post={post} />)
+
   return (
-    <div className='my-9 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-4'>
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+    <div className='my-9 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-4'>
+      {cards}
     </div>
   )
 }

@@ -2,29 +2,45 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import InteractionBar from './InteractionBar'
 import PostTag from './PostTag'
-import { Calendar } from 'lucide-react'
+import { Calendar, Image, ImageOff } from 'lucide-react'
+import { formatDate } from '../../utils/dateFormatter'
 
-function Card() {
+function Card({ post }) {
+
+  const postedAt = formatDate(post.createdAt);
+
+  const tags = post.tags.map((tag, index) => <PostTag key={index} tag={tag} />);
+
   return (
-    <div className='w-auto border border-slate-300 dark:border-slate-700 p-3 pb-2 rounded-2xl hover:border-slate-800 dark:hover:border-slate-200 transition-colors ease-in-out duration-300'>
-      <Link to="/post">
-        <h3 className='font-bold text-xl sm:text-3xl my-4 text-zinc-900 dark:text-zinc-100 transition-colors ease-in-out duration-300'>This is 2025, let's wrap up this sh*t</h3>
+    <div className='h-fit border border-slate-300 dark:border-slate-700 p-3 pb-2 rounded-2xl hover:border-slate-800 dark:hover:border-slate-300 transition-colors ease-in-out duration-500'>
+      <Link to={`/posts/${post.slug}`}>
+        <h3 className='font-extrabold text-xl sm:text-2xl my-3 sm:my-4 text-zinc-900 dark:text-zinc-100 transition-colors ease-in-out duration-500'>{post.title}</h3>
 
-        <div className='flex gap-x-2 my-3'>
-          <PostTag>#networking</PostTag>
-          <PostTag>#cisco</PostTag>
-          <PostTag>#vlans</PostTag>
-          <PostTag>+3</PostTag>
+        <div className='flex gap-x-2 my-2 sm:my-3 text-xs md:text-sm overflow-hidden'>
+          {tags}
         </div>
 
-        <p className='transition-colors ease-in-out duration-300 text-sm text-neutral-500 dark:text-slate-300 font-normal ms-2 mb-3 flex items-center gap-2'>
+        <p className='transition-colors ease-in-out duration-500 text-sm text-neutral-600 dark:text-slate-300 font-normal ms-2 mb-2 sm:mb-3 flex items-center gap-2'>
           <Calendar className='inline size-3 sm:size-4' />
-          <span>February 10, 2024</span>
+          <span>{postedAt}</span>
         </p>
-
-        <img className='rounded-lg w-full' src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.b7pX53-YGRddIVqSE8qDAAHaEK%26pid%3DApi&f=1&ipt=8c387e015047a58bed7a000221d640917d873fce46f468d26fcc13d931ad05aa&ipo=images" alt="Blog post image" />
+        <div className='pb-7/12 sm:pb-3/5 relative'>
+          {
+            !post.isCoverLoaded // cover not loaded yet, show skeleton
+              ?
+              <div className='transition-colors ease-in-out duration-500 animate-pulse w-full h-full absolute object-cover  bg-gray-200 dark:bg-gray-800 rounded-2xl flex justify-center items-center'>
+                <Image className='transition-colors ease-in-out duration-500 text-zinc-50 dark:text-zinc-950 size-28' />
+              </div>
+              :
+              post.cover
+                ?
+                <img className='rounded-lg absolute h-full w-full object-cover' src={post.cover} alt='post cover' />
+                :
+                <ImageOff className='transition-colors duration-500 ease-in-out rounded-lg text-zinc-400 dark:text-zinc-500 bg-zinc-200 dark:bg-zinc-900 box-content mx-auto absolute h-full w-full object-cover' />
+          }
+        </div>
       </Link>
-      <InteractionBar forPostPage={false} />
+      <InteractionBar forPostPage={false} likes={post.likes} dislikes={post.dislikes} comments={post.comments} />
     </div>
   )
 }

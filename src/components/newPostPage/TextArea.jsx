@@ -59,7 +59,7 @@ function TextArea({ blockData, error, handleDeleteBlock, handleBlockChange, hand
             id={id}
             className='flex flex-col my-6 px-3 relative'
         >
-            <div className='transition-colors duration-300 ease-in-out bg-neutral-200 dark:bg-zinc-800 rounded-lg pt-3 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-500 dark:hover:border-zinc-400'>
+            <div className='transition-colors duration-500 ease-in-out bg-neutral-200 dark:bg-zinc-800 rounded-lg pt-3 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-500 dark:hover:border-zinc-400'>
 
                 {
                     type === postBodyBlocks.CODE_SNIPPET
@@ -67,7 +67,7 @@ function TextArea({ blockData, error, handleDeleteBlock, handleBlockChange, hand
                     <select
                         onChange={handleSelectChange}
                         value={language}
-                        className='transition-colors duration-300 ease-in-out text-sm sm:text-lg text-zinc-800 dark:text-zinc-300 cursor-pointer bg-transparent absolute left-4 sm:left-6'
+                        className='transition-colors duration-500 ease-in-out text-sm sm:text-lg text-zinc-800 dark:text-zinc-300 cursor-pointer bg-transparent absolute left-4 sm:left-6'
                     >
                         {languages.map((lang) => (
                             <option key={lang} value={lang}>
@@ -81,7 +81,7 @@ function TextArea({ blockData, error, handleDeleteBlock, handleBlockChange, hand
                     type='button'
                     onClick={handleDeleteBlock}
                     title='Delete Block'
-                    className='transition-colors duration-300 ease-in-out absolute top-1 right-4 text-zinc-700 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-600 p-2 rounded-full'
+                    className='transition-colors duration-500 ease-in-out absolute top-1 right-4 text-zinc-700 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-600 p-2 rounded-full'
                 >
                     <Trash className='size-5 sm:size-6' />
                 </button>
@@ -91,7 +91,7 @@ function TextArea({ blockData, error, handleDeleteBlock, handleBlockChange, hand
                     value={value}
                     id={textAreaId}
                     placeholder='Type...'
-                    className='transition-colors duration-300 ease-in-out w-full bg-zinc-50 dark:bg-zinc-950 py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-b-xl focus:outline-none'
+                    className='transition-colors duration-500 ease-in-out w-full bg-zinc-50 dark:bg-zinc-950 py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-b-xl focus:outline-none'
                 ></textarea>
             </div>
             {error && <InputErrorMessage message={error.message} />}

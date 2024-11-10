@@ -31,7 +31,7 @@ function AddPostBlockButton({ handleAddBlock, blockType }) {
             data-block-type={blockType}
             type='button'
             title={blockType}
-            className={`transition-colors duration-300 ease-in-out flex items-center justify-center gap-2 py-2 sm:py-3 font-semibold text-zinc-900 dark:text-zinc-50 w-full cursor-pointer dark:hover:bg-zinc-800 ${style}`}
+            className={`transition-colors duration-500 ease-in-out flex items-center justify-center gap-2 py-2 sm:py-3 font-semibold text-zinc-900 dark:text-zinc-50 w-full cursor-pointer dark:hover:bg-zinc-800 ${style}`}
         >
             {icon} <span className='hidden sm:block'>{blockType}</span>
         </button>

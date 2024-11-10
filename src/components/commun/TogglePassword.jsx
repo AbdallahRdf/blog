@@ -16,9 +16,9 @@ function TogglePassword({ inputId }) {
             {
                 isEyeOpen
                     ?
-                    <Eye className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
+                    <Eye className='transition-colors duration-500 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
                     :
-                    <EyeOff className='transition-colors duration-300 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
+                    <EyeOff className='transition-colors duration-500 ease-in-out size-5 md:size-6 text-slate-500 dark:text-slate-200' />
             }
         </button>
     )

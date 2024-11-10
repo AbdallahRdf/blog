@@ -1,8 +1,11 @@
 import React from 'react'
 
-function PostTag({children}) {
+function PostTag({ tag }) {
     return (
-        <p className='transition-colors ease-in-out duration-300 text-gray-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 p-1 rounded-lg'>{children}</p>
+        // <p className='transition-colors ease-in-out duration-500 text-zinc-500 dark:text-zinc-300 border border-zinc-500 dark:border-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 py-1 px-2 rounded-lg'>
+        <p className='transition-colors ease-in-out duration-500 text-zinc-800 dark:text-zinc-200 bg-gray-200 dark:bg-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-700 py-1 px-2 rounded-lg'>
+            {tag}
+        </p>
     )
 }
 

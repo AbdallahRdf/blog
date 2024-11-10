@@ -8,3 +8,5 @@ export const UPLOAD_CONFIG = {
         PATH: 'blog-images'
     }
 }
+
+export const UPLOAD_BUCKET = 'blog-images'

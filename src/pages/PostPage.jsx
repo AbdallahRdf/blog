@@ -11,7 +11,7 @@ import PostCover from '../components/post/PostCover'
 function PostPage() {
     return (
         <>
-            <PostTitle>This is the end of 2025, explore now!</PostTitle>
+            {/* <PostTitle>This is the end of 2025, explore now!</PostTitle>
 
             <PostPublishDate>FEB 10, 2024</PostPublishDate>
 
@@ -29,7 +29,7 @@ function PostPage() {
                 </div>
                 <SideMenu />
             </div>
-            <CommentsSection />
+            <CommentsSection /> */}
         </>
     )
 }

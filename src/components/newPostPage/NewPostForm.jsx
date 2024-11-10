@@ -65,7 +65,7 @@ function NewPostForm({
             onSubmit={handleSubmit(handleFormSubmit)}
             className='w-full xl:w-[1280px] mx-auto rounded-xl py-14'
         >
-            <h1 className='text-2xl sm:text-4xl font-semibold text-center text-zinc-950 dark:text-zinc-50 transition-colors duration-300 ease-in-out'>Create new Post</h1>
+            <h1 className='text-2xl sm:text-4xl font-semibold text-center text-zinc-950 dark:text-zinc-50 transition-colors duration-500 ease-in-out'>Create new Post</h1>
 
             <FormSectionWithTextInput
                 label='Post Title'
@@ -73,7 +73,7 @@ function NewPostForm({
                 error={errors?.title}
                 register={register}
                 placeholder='post title...'
-                className={`transition-colors duration-300 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-xl ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.title ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
+                className={`transition-colors duration-500 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-xl ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.title ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
             />
 
             <FormSectionWithTextarea
@@ -82,7 +82,7 @@ function NewPostForm({
                 error={errors?.description}
                 register={register}
                 placeholder='post description'
-                className={`transition-colors duration-300 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-xl ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.description ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
+                className={`transition-colors duration-500 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg text-zinc-950 dark:text-zinc-50 rounded-xl ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2 ${errors?.description ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
             />
 
             <FormSectionWithFileInput
@@ -99,7 +99,7 @@ function NewPostForm({
                 error={errors?.tags}
                 register={register}
                 placeholder='example: coding javascript backend ...'
-                className={`transition-colors duration-300 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg rounded-xl text-zinc-950 dark:text-zinc-50 ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2  ${errors?.tags ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
+                className={`transition-colors duration-500 ease-in-out w-full bg-transparent py-2 sm:py-3 px-4 text-base sm:text-lg rounded-xl text-zinc-950 dark:text-zinc-50 ring-1 ring-zinc-300 dark:ring-zinc-600 hover:ring-zinc-500 dark:hover:ring-zinc-300 focus:outline-none focus:ring-2  ${errors?.tags ? 'focus:ring-red-600' : 'focus:ring-zinc-700 dark:focus:ring-zinc-300'}`}
             />
 
             <h3 className='text-xl sm:text-3xl font-semibold text-zinc-900 dark:text-slate-200 mb-2 px-3 text-center'>Blog Post Body</h3>

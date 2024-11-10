@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { createClient } from '@supabase/supabase-js'
 import postBodyBlocks from '../enums/postBodyBlocks'
 import { v4 as uuidv4 } from 'uuid'
-import { UPLOAD_CONFIG } from '../config/upload'
+import { UPLOAD_BUCKET, UPLOAD_CONFIG } from '../config/upload'
 import useCustomAxios from '../hooks/useCustomAxios'
 import usePostBlocks from '../hooks/usePostBlocks'
 import { AuthContext } from '../context/contexts'
@@ -176,7 +176,7 @@ function NewPost() {
         // updload the post cover.
         const { data: uploadedFileData, error: coverError } = await supabase
             .storage
-            .from('blog-images')
+            .from(UPLOAD_BUCKET)
             .upload(`${UPLOAD_CONFIG.POST_COVER.PATH}/${uuidv4()}-${formValues.cover[0].name}`, formValues.cover[0]);
 
         if (coverError) {
@@ -190,7 +190,7 @@ function NewPost() {
             if (block.type === postBodyBlocks.IMAGE) {
                 const { data: uploadedFileData, error } = await supabase
                     .storage
-                    .from('blog-images')
+                    .from(UPLOAD_BUCKET)
                     .upload(`${UPLOAD_CONFIG.POST_IMAGE.PATH}/${uuidv4()}-${block.value.name}`, block.value);
 
                 if (error) {

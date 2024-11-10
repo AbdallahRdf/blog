@@ -12,7 +12,7 @@ function Footer() {
     const { isDarkMode } = useContext(ThemeContext);
 
     return (
-        <footer className="border-t border-t-purple-600 dark:border-t-purple-400 mt-8 sm:mt-12 pt-8 sm:pt-16 pb-6 px-9">
+        <footer className="self-stretch border-t border-t-purple-600 dark:border-t-purple-400 mt-8 sm:mt-12 pt-8 sm:pt-16 pb-6 px-9">
             <div className='mx-auto w-full xl:w-[1230px]'>
 
                 <Link to="/" className='flex items-center'>
