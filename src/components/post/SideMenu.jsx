@@ -1,8 +1,11 @@
 import { TableOfContents, User } from 'lucide-react'
 import React, { useEffect } from 'react'
 import PostTag from './PostTag'
+import AuthorCard from './AuthorCard';
 
-function SideMenu({ headers, tags, isItOnTheSide = true }) {
+const NAVBAR_HEIGHT = 100;
+
+function SideMenu({ author, headers, tags, isItOnTheSide = true }) {
     const tagsToShow = tags.map((tag, index) => <PostTag key={index} tag={tag} />);
 
     const headersToShow = headers.map(header => {
@@ -33,7 +36,7 @@ function SideMenu({ headers, tags, isItOnTheSide = true }) {
 
             if (targetElement) {
                 window.scrollTo({
-                    top: targetElement.offsetTop - 100,
+                    top: targetElement.offsetTop - NAVBAR_HEIGHT,
                     behavior: 'smooth'
                 });
             }
@@ -49,21 +52,10 @@ function SideMenu({ headers, tags, isItOnTheSide = true }) {
 
     }, []);
 
-
     return (
         <div className={`${isItOnTheSide ? 'hidden lg:flex lg:flex-col lg:gap-y-6 lg:w-80' : 'flex flex-col gap-y-6 min-w-80 lg:hidden mt-6'}`}>
 
-            <div className='transition-colors duration-500 ease-in-out p-4 rounded-xl border border-slate-400 dark:border-slate-700'>
-                <p className='transition-colors duration-500 text-sm text-slate-600 dark:text-slate-400 mb-2'>Author</p>
-                <div className='flex items-center flex-wrap gap-x-2'>
-                    <User className='transition-colors duration-500 size-12 text-zinc-600 dark:text-zinc-300 border-2 border-zinc-600 dark:border-zinc-300 rounded-xl' />
-                    {/* <img src={userAvatar} alt="user-avatar" className='border-2 rounded-xl' /> */}
-                    <div className='transition-colors duration-500 text-zinc-800 dark:text-zinc-100'>
-                        <p className='text-lg font-semibold'>Abdallah Radfi</p>
-                        <p className='text-base font-normal'>@Username</p>
-                    </div>
-                </div>
-            </div>
+            <AuthorCard author={author} />
 
             <div className='lg:sticky lg:z-10 lg:top-28'>
                 <div className='transition-colors duration-500 ease-in-out p-4 rounded-xl border border-slate-400 dark:border-slate-700 mb-6'>

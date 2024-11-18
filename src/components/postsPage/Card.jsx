@@ -4,8 +4,11 @@ import InteractionBar from './InteractionBar'
 import PostTag from './PostTag'
 import { Calendar, Image, ImageOff } from 'lucide-react'
 import { formatDate } from '../../utils/dateFormatter'
+import useFetchImage from '../../hooks/useFetchImage'
 
 function Card({ post }) {
+
+  const { image: cover, isFetching } = useFetchImage(post.cover);
 
   const postedAt = formatDate(post.createdAt);
 
@@ -26,21 +29,21 @@ function Card({ post }) {
         </p>
         <div className='pb-7/12 sm:pb-3/5 relative'>
           {
-            !post.isCoverLoaded // cover not loaded yet, show skeleton
+            isFetching
               ?
               <div className='transition-colors ease-in-out duration-500 animate-pulse w-full h-full absolute object-cover  bg-gray-200 dark:bg-gray-800 rounded-2xl flex justify-center items-center'>
                 <Image className='transition-colors ease-in-out duration-500 text-zinc-50 dark:text-zinc-950 size-28' />
               </div>
               :
-              post.cover
+              cover
                 ?
-                <img className='rounded-lg absolute h-full w-full object-cover' src={post.cover} alt='post cover' />
+                <img className='rounded-lg absolute h-full w-full object-cover' src={cover} alt='post cover' />
                 :
                 <ImageOff className='transition-colors duration-500 ease-in-out rounded-lg text-zinc-400 dark:text-zinc-500 bg-zinc-200 dark:bg-zinc-900 box-content mx-auto absolute h-full w-full object-cover' />
           }
         </div>
       </Link>
-      <InteractionBar forPostPage={false} likes={post.likes} dislikes={post.dislikes} comments={post.comments} />
+      <InteractionBar postId={post._id} likes={post.likes} dislikes={post.dislikes} comments={post.comments} />
     </div>
   )
 }

@@ -1,16 +1,17 @@
 import React from 'react'
 import PostImage from './PostImage'
+import PostImagePreviewMode from '../newPostPage/PostImagePreviewMode'
 import CodeSnippet from './CodeSnippet'
 import CodeSnippetOutput from './CodeSnippetOutput'
 import postBodyBlocks from '../../enums/postBodyBlocks'
 import PostText from './PostText'
 
-function PostBody({ content, postBody }) {
+function PostBody({ postContent, previewMode = false }) {
 
-  const postBodyJSX = postBody.map((block, index) => {
+  const postContentJSX = postContent.map((block, index) => {
     switch (block.type) {
       case postBodyBlocks.EDITOR: return <PostText key={index} content={block.value} />
-      case postBodyBlocks.IMAGE: return <PostImage key={index} url={URL.createObjectURL(block.value)} />
+      case postBodyBlocks.IMAGE: return previewMode ? <PostImagePreviewMode key={index} url={URL.createObjectURL(block.value)} /> : <PostImage key={index} path={block.value} />
       case postBodyBlocks.CODE_OUTPUT: return <CodeSnippetOutput key={index} output={block.value} />
       case postBodyBlocks.CODE_SNIPPET: return <CodeSnippet key={index} language={block.language} code={block.value} />
       default: return null;
@@ -19,8 +20,7 @@ function PostBody({ content, postBody }) {
 
   return (
     <>
-      <PostText content={content} />
-      {postBodyJSX}
+      {postContentJSX}
     </>
   )
 }

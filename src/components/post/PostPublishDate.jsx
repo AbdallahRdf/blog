@@ -1,8 +1,8 @@
 import React from 'react'
 
-function PostPublishDate({ children }) {
+function PostPublishDate({ date }) {
   return (
-    <p className='text-slate-500 text-xl my-8'>{children}</p>
+    <p className='text-slate-500 text-lg sm:text-xl my-8'>{date}</p>
   )
 }
 

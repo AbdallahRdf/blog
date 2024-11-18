@@ -30,7 +30,7 @@ function UserDropDown() {
         }
         setAccessToken(null);
         setUser(null);
-        navigator('/');
+        location.href = '/';
     }
 
     return (

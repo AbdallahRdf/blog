@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
-import UserHomePage from "./pages/UserHomePage";
+import Posts from "./pages/Posts";
 import AdminHomePage from "./pages/AdminHomePage";
 import Login from "./pages/Login";
-import PostPage from "./pages/PostPage";
+import Post from "./pages/Post";
 import Signup from "./pages/Signup";
 import UsersList from "./pages/UsersList";
 import NewPost from "./pages/NewPost";
@@ -14,11 +14,10 @@ import LoadingPage from './components/commun/LoadingPage'
 import WaitAccountActivation from "./pages/WaitAccountActivation";
 import ErrorPage from './pages/ErrorPage';
 import userRoles from './enums/userRoles';
-import { AuthContext, ThemeContext } from "./context/contexts";
+import { AuthContext, SupabaseContext, ThemeContext } from "./context/contexts";
 import useCustomAxios from "./hooks/useCustomAxios";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient()
+import { createClient } from "@supabase/supabase-js";
+import LayoutWithoutNavbar from "./components/LayoutWithoutNavbar";
 
 export default function App() {
 
@@ -28,6 +27,8 @@ export default function App() {
 
   const [accessToken, setAccessToken] = useState(undefined);
   const [user, setUser] = useState(undefined);
+
+  const supabase = createClient(import.meta.env.VITE_SUPABASE_PROJECT_URL, import.meta.env.VITE_SUPABASE_API_KEY);
 
   useEffect(() => {
     const authenticate = async () => {
@@ -40,7 +41,7 @@ export default function App() {
         jwtBody = JSON.parse(atob(jwtBodyBase64));
       } catch (error) {
         console.log('app component: ' + error.message);
-      }finally{
+      } finally {
         setAccessToken(token);
         setUser(jwtBody)
       }
@@ -56,26 +57,28 @@ export default function App() {
       ?
       <LoadingPage />
       :
-      <QueryClientProvider client={queryClient}>
+      <SupabaseContext.Provider value={supabase}>
         <AuthContext.Provider value={{ accessToken, setAccessToken, user, setUser }}>
           <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Layout />}>
 
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Posts />} />
+                  <Route path="posts" element={<Posts />} />
+                  <Route path="posts/:slug" element={<Post />} />
                   {
                     (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
-                      ?
-                      <>
-                        <Route index element={<AdminHomePage />} />
-                        <Route path="users" element={<UsersList />} />
-                        <Route path="posts/new" element={<NewPost />} />
-                        <Route path="posts" element={<UserHomePage />} />
-                      </>
-                      :
-                      <Route index element={<UserHomePage />} />
+                    &&
+                    <>
+                      <Route path="dashboard" element={<AdminHomePage />} />
+                      <Route path="users" element={<UsersList />} />
+                      <Route path="posts/new" element={<NewPost />} />
+                    </>
                   }
+                </Route>
 
+                <Route path="/" element={<LayoutWithoutNavbar />} >
                   {
                     !accessToken // if not logged in
                     &&
@@ -86,16 +89,13 @@ export default function App() {
                       <Route path="auth/account-activation/:token" element={<AccountActivation />} />
                     </>
                   }
-
-                  <Route path="posts" element={<UserHomePage />} />
-                  <Route path="post" element={<PostPage />} />
-
                   <Route path="*" element={<ErrorPage />} />
                 </Route>
+
               </Routes>
             </BrowserRouter>
           </ThemeContext.Provider>
         </AuthContext.Provider>
-      </QueryClientProvider>
+      </SupabaseContext.Provider>
   )
 }

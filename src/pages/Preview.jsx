@@ -5,8 +5,10 @@ import InteractionBar from '../components/post/InteractionBar'
 import PostDescription from '../components/post/PostDescription'
 import SideMenu from '../components/post/SideMenu'
 import PostBody from '../components/post/PostBody'
-import PostCover from '../components/post/PostCover'
+import PostCoverPreviewMode from '../components/newPostPage/PostCoverPreviewMode'
 import { ArrowBigLeft } from 'lucide-react'
+import postBodyBlocks from '../enums/postBodyBlocks'
+import { formatDate } from '../utils/dateFormatter'
 
 function Preview({ setShowPreviewMode, formValues: { title, cover, description, tags, content }, postBody, headers }) {
 
@@ -14,25 +16,41 @@ function Preview({ setShowPreviewMode, formValues: { title, cover, description, 
         .split(' ')
         .filter(tag => tag.trim() !== "");
 
+    const postContent = [
+        {
+            type: postBodyBlocks.EDITOR,
+            value: content
+        },
+        ...postBody
+    ];
+
+    const postedAt = formatDate(Date.now().toString());
+
+    const author = {
+        fullName: 'John Doe',
+        username: 'JDoe',
+        profileImage: null
+    };
+
     return (
         <div className='w-full xl:w-[1280px] mx-auto pt-32 pb-24 px-2 scroll-smooth'>
-            <PostTitle>{title}</PostTitle>
+            <PostTitle title={title} />
 
-            <PostPublishDate>FEB 10, 2024</PostPublishDate>
+            <PostPublishDate date={postedAt} />
 
             <div className="flex flex-col lg:flex-row gap-6">
                 <div className='w-full lg:max-w-4xl'>
-                    <PostCover url={URL.createObjectURL(cover[0])} />
+                    <PostCoverPreviewMode url={URL.createObjectURL(cover[0])} />
 
                     <InteractionBar />
 
                     <PostDescription description={description} />
 
-                    <SideMenu headers={headers} tags={tagsArray} isItOnTheSide={false} />
+                    <SideMenu author={author} headers={headers} tags={tagsArray} isItOnTheSide={false} />
 
-                    <PostBody content={content} postBody={postBody} />
+                    <PostBody postContent={postContent} />
                 </div>
-                <SideMenu headers={headers} tags={tagsArray} />
+                <SideMenu author={author} headers={headers} tags={tagsArray} />
             </div>
             <button
                 title='Back'
