@@ -21,7 +21,7 @@ function PostSection({ post }) {
                 <div className='w-full lg:max-w-4xl'>
                     <PostCover coverPath={post.cover} />
 
-                    <InteractionBar />
+                    <InteractionBar post={post} />
 
                     <PostDescription description={post.description} />
 

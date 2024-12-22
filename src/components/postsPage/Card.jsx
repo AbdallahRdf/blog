@@ -43,7 +43,7 @@ function Card({ post }) {
           }
         </div>
       </Link>
-      <InteractionBar postId={post._id} likes={post.likes} dislikes={post.dislikes} comments={post.comments} />
+      <InteractionBar post={post} />
     </div>
   )
 }

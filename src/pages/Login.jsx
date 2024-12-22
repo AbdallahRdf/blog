@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText'
 import TogglePassword from '../components/commun/TogglePassword'
-import FormAlert from '../components/commun/FormAlert'
-import { useContext, useState } from 'react'
-import { AuthContext } from '../context/contexts'
+import { useContext } from 'react'
+import { AuthContext, ThemeContext } from '../context/contexts'
 import useCustomAxios from '../hooks/useCustomAxios'
+import { toast, ToastContainer } from 'react-toastify'
 
 const schema = yup.object().shape({
   email: yup
@@ -20,10 +20,11 @@ const schema = yup.object().shape({
     .string()
     .trim()
     .required()
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-.,;\/#]).{8,}$/) //Password must be at least 8 characters long and include one lowercase letter, one uppercase letter, one number, and one symbol.
 });
 
 function Login() {
+
+  const { isDarkMode } = useContext(ThemeContext);
 
   const navigator = useNavigate();
 
@@ -31,12 +32,16 @@ function Login() {
 
   const { setAccessToken, setUser } = useContext(AuthContext);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, getValues } = useForm({
+  const { register, handleSubmit, formState: { isSubmitting }, getValues } = useForm({
     resolver: yupResolver(schema)
   })
 
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [showInfoAlert, setShowInfoAlert] = useState(false);
+  const handleClick = () => navigator('/auth/account-activation', {
+    state: {
+      email: getValues("email"),
+      sendEmailOnLoad: true
+    }
+  });
 
   const handleFormSubmit = async (data) => {
     try {
@@ -48,14 +53,29 @@ function Login() {
 
       setAccessToken(token);
       setUser(jwtBody);
-      
+
       navigator('/');
     } catch (error) {
       if (error.response.status === 400) { // invalid credentials
-        setShowErrorAlert(true);
+        toast.error("Invalid credentials!", {
+          theme: isDarkMode ? "dark" : "light",
+          autoClose: 10000
+        })
       } else if (error.response.status === 403) { // account is not activated, need to check email.
-        setShowInfoAlert(true);
-        setShowErrorAlert(false);
+        toast.info(() => (
+          <div>
+            You need to activate your account to log in, check your inbox for instructions.
+            <button
+              onClick={handleClick}
+              className='ms-1 underline hover:no-underline'
+            >
+              Resend Email
+            </button>
+          </div>
+        ), {
+          theme: isDarkMode ? "dark" : "light",
+          autoClose: 15000
+        })
       } else {
         navigator(`/internal-server-error`, {
           state: {
@@ -67,13 +87,6 @@ function Login() {
     }
   }
 
-  const handleClick = () => navigator('/auth/account-activation', {
-    state: {
-      email: getValues("email"),
-      sendEmailOnLoad: true
-    }
-  });
-
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -82,37 +95,11 @@ function Login() {
           <LogoWithText />
         </Link>
 
-        {
-          showInfoAlert
-          &&
-          <div className='w-full md:w-11/12 lg:w-3/4 transition-all duration-500 ease-in-out flex items-center justify-between gap-x-6 bg-cyan-100 dark:bg-cyan-200 py-4 md:py-5 px-3 my-7 rounded-xl text-sm md:text-lg text-cyan-700 dark:text-cyan-950 border-s-4 border-s-cyan-700 dark:border-none absolute top-0 right-0'>
-            <div className='flex items-center gap-x-2'>
-              <Info className='hidden md:inline-block' />
-              <div>
-                You need to activate your account to log in, check your email for instructions.
-                <button
-                  onClick={handleClick}
-                  className='ms-1 underline hover:no-underline'
-                >
-                  Resend Email
-                </button>
-              </div>
-            </div>
-            <button onClick={() => setShowInfoAlert(false)}>
-              <X />
-            </button>
-          </div>
-        }
+        <ToastContainer />
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full mx-auto mt-28 md:mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
           <h1 className='transition-all duration-500 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>👋 Welcome back!</h1>
           <p className='transition-all duration-500 ease-in-out text-sm md:text-lg font-normal text-center text-neutral-900 dark:text-zinc-50 mb-6'>Log in to access your account</p>
-
-          {
-            (errors.email || errors.password || showErrorAlert)
-            &&
-            <FormAlert boldMessage="Invalid credentials!" />
-          }
 
           <div className='w-full my-4'>
             <label htmlFor="email" className='transition-colors duration-500 ease-in-out text-base md:text-lg text-slate-800 dark:text-slate-200 inline-block mb-2 ps-1'>Email</label>

@@ -60,12 +60,21 @@ function Posts() {
   }, [showRetryBtn, cursor, selectSortingRef])
 
   useEffect(() => {
+    if (selectSortingRef.current) {
+      selectSortingRef.current.value = localStorage.getItem('postSort') ?? 'latest';
+    }
     scroll(0, 0);
     if (!didFetch.current) {
       didFetch.current = true;
       fetchPosts();
     }
   }, []);
+
+  useEffect(() => {
+    if (selectSortingRef.current) {
+      localStorage.setItem('postSort', selectSortingRef.current.value);
+    }
+  }, [selectSortingRef.current?.value])
 
   useEffect(() => {
     // handles infinite scroll

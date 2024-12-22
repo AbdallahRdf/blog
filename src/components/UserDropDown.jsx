@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { BookmarkCheck, LogOut, Pencil, User, UserRound, Users } from 'lucide-react'
+import { BookmarkCheck, ChartNoAxesCombined, LogOut, Pencil, User, UserRound, Users } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { AuthContext } from '../context/contexts';
@@ -54,18 +54,30 @@ function UserDropDown() {
                 <p className='text-base sm:text-lg'>{user?.username}</p>
             </div>
 
+            {
+                (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
+                &&
+                <>
+                    <Link
+                        to="/dashboard"
+                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                    >
+                        <ChartNoAxesCombined className='inline size-5 sm:size-6' /> Dashboard
+                    </Link >
+                    <Link
+                        to="/posts/new"
+                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                    >
+                        <Pencil className='inline size-5 sm:size-6' /> Create new post
+                    </Link >
+                </>
+            }
+
             <Link
                 to="/profile"
                 className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
             >
                 <UserRound className='inline size-5 sm:size-6' /> Profile
-            </Link >
-
-            <Link
-                to="/saved"
-                className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
-            >
-                <BookmarkCheck className='inline size-5 sm:size-6' /> Saved posts
             </Link >
 
             {
@@ -76,16 +88,17 @@ function UserDropDown() {
                         to="/posts/new"
                         className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
                     >
-                        <Pencil className='inline size-5 sm:size-6' /> Create new post
-                    </Link >
-                    <Link
-                        to="/posts/new"
-                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
-                    >
                         <Users className='inline size-5 sm:size-6' /> Users
                     </Link >
                 </>
             }
+
+            <Link
+                to="/saved"
+                className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+            >
+                <BookmarkCheck className='inline size-5 sm:size-6' /> Saved posts
+            </Link >
 
             <button
                 onClick={logout}

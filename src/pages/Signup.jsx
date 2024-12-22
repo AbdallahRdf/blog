@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AtSign, LoaderCircle, LockIcon, Mail, User } from 'lucide-react'
 import * as yup from 'yup'
@@ -7,8 +7,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText';
 import TogglePassword from '../components/commun/TogglePassword'
 import InputErrorMessage from '../components/commun/InputErrorMessage'
-import FormAlert from '../components/commun/FormAlert'
 import useCustomAxios from '../hooks/useCustomAxios'
+import { ThemeContext } from '../context/contexts'
+import { toast, ToastContainer } from 'react-toastify'
 
 const schema = yup.object().shape({
     fullName: yup
@@ -36,11 +37,11 @@ const schema = yup.object().shape({
 
 function Signup() {
 
+    const { isDarkMode } = useContext(ThemeContext);
+
     const navigator = useNavigate();
 
     const customAxios = useCustomAxios();
-
-    const [showAlert, setShowAlert] = useState(false);
 
     const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
         resolver: yupResolver(schema)
@@ -56,12 +57,15 @@ function Signup() {
 
         } catch (error) {
             // input validation failed on the server, show error messages
-            if (error.response.status === 400) {
+            if (error.response && error.response.status === 400) {
                 const errorMessages = error.response.data.errorMessages;
                 Object.keys(errorMessages).forEach(field => setError(field, { message: errorMessages[field] }));
             } else {
                 // server error occured
-                setShowAlert(true);
+                toast.error("An unexpected error occurred. Please try again later.", {
+                    theme: isDarkMode ? "dark" : "light",
+                    autoClose: 10000
+                })
             }
         }
     }
@@ -77,11 +81,7 @@ function Signup() {
             <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full sm:px-0 sm:w-96 mx-auto mt-10 flex-grow'>
                 <h1 className='transition-all duration-500 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>Sign up</h1>
 
-                {
-                    showAlert
-                    &&
-                    <FormAlert boldMessage="Server Error!" normalMessage="Try Later" setShowAlert={setShowAlert} />
-                }
+                <ToastContainer />
 
                 {/* full name field */}
                 <div className='w-full my-4'>

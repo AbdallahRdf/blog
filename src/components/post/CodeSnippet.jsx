@@ -2,21 +2,17 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { irBlack } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useEffect, useRef, useState } from "react";
 import { Check, CopyIcon } from 'lucide-react';
+import useCopy from '../../hooks/useCopy';
 
 
 const CodeSnippet = ({ language, code }) => {
 
     const preRef = useRef(null);
     const [preHeight, setPreHeight] = useState(0);
-    const [isCopied, setIsCopied] = useState(false);
 
-    const handleClick = (e) => {
-        setIsCopied(true);
-        navigator.clipboard.writeText(code)
-        setTimeout(() => {
-            setIsCopied(false);
-        }, 2500);
-    }
+    const {isCopied, copy} = useCopy();
+
+    const handleClick = () => copy(code);
 
     useEffect(() => {
         setPreHeight(preRef.current.offsetHeight)

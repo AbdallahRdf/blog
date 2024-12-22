@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import CommentBox from './CommentBox'
 import CommentFrom from './CommentFrom';
 import useCustomAxios from '../../hooks/useCustomAxios';
 import { Loader } from 'lucide-react';
 import RetryBtn from '../commun/RetryBtn';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/contexts';
 
 function CommentsSection({ post }) {
+
+    const { user } = useContext(AuthContext);
 
     const [comments, setComments] = useState(null);
     const [showRetryBtn, setShowRetryBtn] = useState(false);
@@ -20,7 +23,7 @@ function CommentsSection({ post }) {
         showRetryBtn && setShowRetryBtn(false) // if retry button is visible then hide it;
 
         try {
-            const response = await customAxios.get(`/posts/${post.slug}/comments`);
+            const response = await customAxios.get(`/posts/${post._id}/comments`);
             console.log(response);
             setComments(response.data);
         } catch (error) {
@@ -56,11 +59,11 @@ function CommentsSection({ post }) {
     return (
         <div className='mt-8 border-t border-slate-700'>
             <div className="mx-3 xl:mx-0">
-                <p className='transition-colors duration-500 ease-in-out mt-5 mb-8 text-2xl md:text-3xl text-slate-900 dark:text-slate-100'>
+                <p id='comments' className='transition-colors duration-500 ease-in-out mt-5 mb-8 text-2xl md:text-3xl text-slate-900 dark:text-slate-100'>
                     Comments {post.comments ? '' : `(${post.comments})`}
                 </p>
 
-                <CommentFrom />
+                {user && <CommentFrom postId={post._id} fetchComments={fetchComments} />}
 
                 {
                     isFetching

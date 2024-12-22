@@ -57,9 +57,9 @@ export default function App() {
       ?
       <LoadingPage />
       :
-      <SupabaseContext.Provider value={supabase}>
-        <AuthContext.Provider value={{ accessToken, setAccessToken, user, setUser }}>
-          <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
+      <SupabaseContext value={supabase}>
+        <AuthContext value={{ accessToken, setAccessToken, user, setUser }}>
+          <ThemeContext value={{ isDarkMode, setIsDarkMode }}>
             <BrowserRouter>
               <Routes>
 
@@ -94,8 +94,8 @@ export default function App() {
 
               </Routes>
             </BrowserRouter>
-          </ThemeContext.Provider>
-        </AuthContext.Provider>
-      </SupabaseContext.Provider>
+          </ThemeContext>
+        </AuthContext>
+      </SupabaseContext>
   )
 }

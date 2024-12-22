@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import useCustomAxios from "./useCustomAxios";
 import { AuthContext } from "../context/contexts";
 import { toast } from "react-toastify";
@@ -53,6 +53,10 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
             isDislikedRef.current = response.data.isDisliked;
             response.data.accessToken && setAccessToken(response.data.accessToken);
         } catch (error) {
+            if (error.response && error.response.status === 404) {
+                setIsDisliked(false);
+                setIsLiked(false);
+            }
             if (!(error.response && error.response.status < 500)) {
                 toast.error('Failed to fetch your reaction. Please try again.');
             }
