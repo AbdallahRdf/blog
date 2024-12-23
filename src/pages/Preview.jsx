@@ -8,7 +8,7 @@ import PostBody from '../components/post/PostBody'
 import PostCoverPreviewMode from '../components/newPostPage/PostCoverPreviewMode'
 import { ArrowBigLeft } from 'lucide-react'
 import postBodyBlocks from '../enums/postBodyBlocks'
-import { formatDate } from '../utils/dateFormatter'
+import { formatDate } from '../utils/formatter'
 
 function Preview({ setShowPreviewMode, formValues: { title, cover, description, tags, content }, postBody, headers }) {
 

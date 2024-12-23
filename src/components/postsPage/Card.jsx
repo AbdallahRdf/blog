@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import InteractionBar from './InteractionBar'
 import PostTag from './PostTag'
 import { Calendar, Image, ImageOff } from 'lucide-react'
-import { formatDate } from '../../utils/dateFormatter'
+import { formatDate } from '../../utils/formatter'
 import useFetchImage from '../../hooks/useFetchImage'
 
 function Card({ post }) {

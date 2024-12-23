@@ -4,7 +4,7 @@ export const UPLOAD_CONFIG = {
         PATH: 'blog-covers'
     },
     POST_IMAGE: {
-        SIZE_LIMIT: 1 * 1024 * 1024,// 2MB
+        SIZE_LIMIT: 1 * 1024 * 1024,// 1MB
         PATH: 'blog-images'
     }
 }

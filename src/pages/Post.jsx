@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import CommentsSection from '../components/post/CommentsSection'
+import CommentsSection from '../components/comments/CommentsSection'
 import { useNavigate, useParams } from 'react-router-dom'
 import PostSection from '../components/post/PostSection'
 import useCustomAxios from '../hooks/useCustomAxios';
@@ -23,7 +23,6 @@ function Post() {
 
         try {
             const response = await customAxios.get(`/posts/${slug}`);
-            console.log(response);
             setPost(response.data);
         } catch (error) {
             console.log(error);

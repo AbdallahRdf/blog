@@ -1,5 +1,5 @@
 import React from 'react'
-import { formatDate } from '../../utils/dateFormatter';
+import { formatDate } from '../../utils/formatter';
 import PostTitle from './PostTitle';
 import PostPublishDate from './PostPublishDate';
 import PostCover from './PostCover';
