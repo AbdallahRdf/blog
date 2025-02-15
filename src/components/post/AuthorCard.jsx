@@ -24,7 +24,7 @@ function AuthorCard({ author }) {
                 }
                 <div className='transition-colors duration-500 text-zinc-800 dark:text-zinc-100'>
                     <p className='text-lg font-semibold'>{author.fullName}</p>
-                    <p className='text-base font-normal'>@{author.username}</p>
+                    <p className='text-base font-normal'>{author.username}</p>
                 </div>
             </div>
         </div>
