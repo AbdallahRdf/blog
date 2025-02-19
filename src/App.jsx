@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from "./components/Layout";
 import Posts from "./pages/Posts";
 import AdminHomePage from "./pages/AdminHomePage";
@@ -20,6 +21,8 @@ import { createClient } from "@supabase/supabase-js";
 import LayoutWithoutNavbar from "./components/LayoutWithoutNavbar";
 
 export default function App() {
+
+  const queryClient = new QueryClient()
 
   const [isDarkMode, setIsDarkMode] = useDarkMode();
 
@@ -57,45 +60,48 @@ export default function App() {
       ?
       <LoadingPage />
       :
-      <SupabaseContext value={supabase}>
-        <AuthContext value={{ accessToken, setAccessToken, user, setUser }}>
-          <ThemeContext value={{ isDarkMode, setIsDarkMode }}>
-            <BrowserRouter>
-              <Routes>
+      <SupabaseContext.Provider value={supabase}>
+        <AuthContext.Provider value={{ accessToken, setAccessToken, user, setUser }}>
+          <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
+            <QueryClientProvider client={queryClient}>
+              <BrowserRouter>
+                <Routes>
 
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Posts />} />
-                  <Route path="posts" element={<Posts />} />
-                  <Route path="posts/:slug" element={<Post />} />
-                  {
-                    (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
-                    &&
-                    <>
-                      <Route path="dashboard" element={<AdminHomePage />} />
-                      <Route path="users" element={<UsersList />} />
-                      <Route path="posts/new" element={<NewPost />} />
-                    </>
-                  }
-                </Route>
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<Posts />} />
+                    <Route path="posts" element={<Posts />} />
+                    <Route path="posts/:slug" element={<Post />} />
+                    {
+                      (user?.role === userRoles.ADMIN || user?.role === userRoles.MODERATOR) // if admin or moderator
+                      &&
+                      <>
+                        <Route path="dashboard" element={<AdminHomePage />} />
+                        <Route path="users" element={<UsersList />} />
+                        <Route path="posts/new" element={<NewPost />} />
+                      </>
+                    }
+                  </Route>
 
-                <Route path="/" element={<LayoutWithoutNavbar />} >
-                  {
-                    !accessToken // if not logged in
-                    &&
-                    <>
-                      <Route path="auth/login" element={<Login />} />
-                      <Route path="auth/register" element={<Signup />} />
-                      <Route path="auth/account-activation" element={<WaitAccountActivation />} />
-                      <Route path="auth/account-activation/:token" element={<AccountActivation />} />
-                    </>
-                  }
-                  <Route path="*" element={<ErrorPage />} />
-                </Route>
+                  <Route path="/" element={<LayoutWithoutNavbar />} >
+                    {
+                      !accessToken // if not logged in
+                      &&
+                      <>
+                        <Route path="auth/login" element={<Login />} />
+                        <Route path="auth/register" element={<Signup />} />
+                        <Route path="auth/account-activation" element={<WaitAccountActivation />} />
+                        <Route path="auth/account-activation/:token" element={<AccountActivation />} />
+                      </>
+                    }
+                    <Route path="*" element={<ErrorPage />} />
+                  </Route>
 
-              </Routes>
-            </BrowserRouter>
-          </ThemeContext>
-        </AuthContext>
-      </SupabaseContext>
+                </Routes>
+              </BrowserRouter>
+            </QueryClientProvider>
+
+          </ThemeContext.Provider>
+        </AuthContext.Provider>
+      </SupabaseContext.Provider>
   )
 }

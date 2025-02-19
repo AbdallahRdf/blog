@@ -54,7 +54,7 @@ function Post() {
         <div className='mt-16'>
             {post && <PostSection post={post} />}
             {isFetching && <PostSkeleton />}
-            {showRetryBtn && <RetryBtn label='Unable to load posts' retry={fetchPost} paddingY='py-36' />}
+            {showRetryBtn && <RetryBtn label='Unable to load post' retry={fetchPost} paddingY='py-36' />}
             {post && <CommentsSection post={post} />}
         </div>
     )
