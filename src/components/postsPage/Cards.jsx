@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ListFilter, Loader } from 'lucide-react'
 import useCustomAxios from '../../hooks/useCustomAxios';
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query"
@@ -18,7 +18,13 @@ function Cards() {
     const fetchPosts = async ({ pageParam }) => {
         try {
             const nextCursor = pageParam ? `&cursor=${pageParam}` : '';
-            const sort = selectSortingRef.current ? `&sort=${selectSortingRef.current.value}` : '';
+            let sort = "";
+            if(selectSortingRef.current){
+                sort = `&sort=${selectSortingRef.current.value}`;
+            }
+            else if(localStorage.getItem('postSort')){
+                sort = `&sort=${localStorage.getItem('postSort')}`;
+            }
             const response = await customAxios.get(`/posts?limit=${LIMIT}${nextCursor}${sort}`);
             setH1Title(`${(selectSortingRef.current) ? (selectSortingRef.current.value.charAt(0).toUpperCase() + selectSortingRef.current.value.slice(1)) : 'Latest'} posts`);
             return response?.data
@@ -64,16 +70,15 @@ function Cards() {
         // handles infinite scroll
         const handleScroll = () => {
             // if it is fetching (a request is already sent) or cursor.current is null (there is not more posts to get)
-            if (isFetching || !hasNextPage) return;
+            if (isFetchNextPage || !hasNextPage) return;
 
             const { clientHeight, scrollHeight, scrollTop } = document.scrollingElement;
 
             // if we reach the bottom, no getting posts request is pending, and there is more posts (cursor.current !== null)
             if ((clientHeight + scrollTop >= scrollHeight - FOOTER_HEIGHT)) {
-                console.log("fetch post is triggered")
                 fetchNextPage();
             }
-        };
+        }
 
         document.addEventListener('scroll', handleScroll);
 
