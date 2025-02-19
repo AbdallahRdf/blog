@@ -5,7 +5,7 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query"
 import Card from './Card'
 
 const FOOTER_HEIGHT = 380;
-const LIMIT = 6;
+const LIMIT = 9;
 
 function Cards() {
 
