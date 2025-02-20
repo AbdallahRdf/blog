@@ -1,18 +1,17 @@
-import { Image, ImageOff } from 'lucide-react';
+import { ImageOff } from 'lucide-react';
 import useFetchImage from '../../hooks/useFetchImage';
+import PostCoverSkeleton from '../skeletons/PostCoverSkeleton';
 
 function PostCover({ coverPath }) {
 
-  const { image, isFetching} = useFetchImage(coverPath);
+  const { image, isFetching } = useFetchImage(coverPath);
 
   return (
     <div className='pb-3/6 relative mb-6'>
       {
         isFetching // cover not loaded yet, show skeleton
           ?
-          <div title='Loading...' className='transition-colors ease-in-out duration-500 animate-pulse w-full h-full absolute object-cover  bg-gray-200 dark:bg-gray-800 rounded-2xl flex justify-center items-center cursor-wait'>
-            < Image className='transition-colors ease-in-out duration-500 text-zinc-50 dark:text-zinc-950 size-28' />
-          </div >
+          <PostCoverSkeleton />
           :
           image
             ?

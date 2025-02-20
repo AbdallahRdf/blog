@@ -2,13 +2,19 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import InteractionBar from './InteractionBar'
 import PostTag from './PostTag'
-import { Calendar, Image, ImageOff } from 'lucide-react'
+import { Calendar, ImageOff } from 'lucide-react'
 import { formatDate } from '../../utils/formatter'
 import useFetchImage from '../../hooks/useFetchImage'
+import PostCoverSkeleton from '../skeletons/PostCoverSkeleton'
+import { useInView } from 'react-intersection-observer'
 
 function Card({ post }) {
 
-  const { image: cover, isFetching } = useFetchImage(post.cover);
+  const {ref, inView} = useInView({
+    triggerOnce: true
+  })
+
+  const { image: cover, isFetching } = useFetchImage(post.cover, inView);
 
   const postedAt = formatDate(post.createdAt);
 
@@ -16,6 +22,7 @@ function Card({ post }) {
 
   return (
     <div className='h-fit border border-slate-300 dark:border-slate-700 p-3 pb-2 rounded-2xl hover:border-slate-800 dark:hover:border-slate-300 transition-colors ease-in-out duration-500'>
+      <div ref={ref}></div>
       <Link to={`/posts/${post.slug}`}>
         <h3 className='font-extrabold text-xl sm:text-2xl my-3 sm:my-4 text-zinc-900 dark:text-zinc-100 transition-colors ease-in-out duration-500'>{post.title}</h3>
 
@@ -27,13 +34,12 @@ function Card({ post }) {
           <Calendar className='inline size-3 sm:size-4' />
           <span>{postedAt}</span>
         </p>
+
         <div className='pb-7/12 sm:pb-3/5 relative'>
           {
-            isFetching 
+            isFetching
               ?
-              <div className='transition-colors ease-in-out duration-500 animate-pulse w-full h-full absolute object-cover  bg-gray-200 dark:bg-gray-800 rounded-2xl flex justify-center items-center'>
-                <Image className='transition-colors ease-in-out duration-500 text-zinc-50 dark:text-zinc-950 size-28' />
-              </div>
+              <PostCoverSkeleton />
               :
               cover
                 ?
