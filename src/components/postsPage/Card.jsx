@@ -6,15 +6,10 @@ import { Calendar, ImageOff } from 'lucide-react'
 import { formatDate } from '../../utils/formatter'
 import useFetchImage from '../../hooks/useFetchImage'
 import PostCoverSkeleton from '../skeletons/PostCoverSkeleton'
-import { useInView } from 'react-intersection-observer'
 
 function Card({ post }) {
 
-  const {ref, inView} = useInView({
-    triggerOnce: true
-  })
-
-  const { image: cover, isFetching } = useFetchImage(post.cover, inView);
+  const { image: cover, isFetching } = useFetchImage(post.cover);
 
   const postedAt = formatDate(post.createdAt);
 
@@ -22,7 +17,6 @@ function Card({ post }) {
 
   return (
     <div className='h-fit border border-slate-300 dark:border-slate-700 p-3 pb-2 rounded-2xl hover:border-slate-800 dark:hover:border-slate-300 transition-colors ease-in-out duration-500'>
-      <div ref={ref}></div>
       <Link to={`/posts/${post.slug}`}>
         <h3 className='font-extrabold text-xl sm:text-2xl my-3 sm:my-4 text-zinc-900 dark:text-zinc-100 transition-colors ease-in-out duration-500'>{post.title}</h3>
 

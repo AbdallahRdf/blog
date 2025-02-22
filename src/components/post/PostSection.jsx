@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react'
 import { formatDate } from '../../utils/formatter';
 import PostTitle from './PostTitle';
 import PostPublishDate from './PostPublishDate';
@@ -66,7 +65,7 @@ function PostSection() {
                     <SideMenu author={post.author} headers={post.headers} tags={post.tags} />
                 </div>
             </div>
-            {/* <CommentsSection post={post} /> */}
+            <CommentsSection postId={post._id} />
         </>
     )
 }

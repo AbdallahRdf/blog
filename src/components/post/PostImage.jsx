@@ -7,7 +7,8 @@ import PostImageSkeleton from '../skeletons/PostImageSkeleton';
 function PostImage({ path }) {
 
   const {ref, inView} = useInView({
-    triggerOnce: true
+    triggerOnce: true,
+    rootMargin: '400px'
   })
 
   const { image, isFetching } = useFetchImage(path, inView);

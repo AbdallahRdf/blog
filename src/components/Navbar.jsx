@@ -33,8 +33,9 @@ function Navbar({ handleSearchClick }) {
 
     return (
         <>
-            <nav className='transition-all duration-500 ease-in-out bg-zinc-50 dark:bg-transparent fixed top-2 border border-zinc-200 dark:border-zinc-800 w-full max-w-[1280px] rounded-xl z-50'>
-                <div className='transition-all duration-500 ease-in-out dark:backdrop-blur-xl dark:brightness-75 z-40 absolute inset-0 rounded-xl'></div>
+            <nav className='transition-all duration-500 ease-in-out bg-zinc-50 dark:bg-transparent fixed top-2 border border-zinc-200 dark:border-none w-full max-w-[1280px] rounded-xl z-50'>
+                {/* <div className='transition-all duration-500 ease-in-out dark:backdrop-blur-xl dark:brightness-75 z-40 absolute inset-0 rounded-xl'></div> */}
+                <div className='transition-all duration-500 ease-in-out dark:backdrop-blur-md dark:brightness-75 z-40 absolute inset-0 rounded-xl'></div>
                 <ul className='rounded-xl px-4 py-1 sm:py-3 flex items-center gap-3 sm:gap-6 relative z-50'>
 
                     {/* Logo */}
