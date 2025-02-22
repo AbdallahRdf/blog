@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import LogoWithText from '../components/LogoWithText'
 import TogglePassword from '../components/commun/TogglePassword'
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { AuthContext, ThemeContext } from '../context/contexts'
 import useCustomAxios from '../hooks/useCustomAxios'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 const schema = yup.object().shape({
   email: yup
@@ -26,6 +26,8 @@ function Login() {
 
   const { isDarkMode } = useContext(ThemeContext);
 
+  const toastIdRef = useRef(null);
+
   const navigator = useNavigate();
 
   const customAxios = useCustomAxios();
@@ -34,7 +36,7 @@ function Login() {
 
   const { register, handleSubmit, formState: { isSubmitting }, getValues } = useForm({
     resolver: yupResolver(schema)
-  })
+  });
 
   const handleClick = () => navigator('/auth/account-activation', {
     state: {
@@ -56,13 +58,18 @@ function Login() {
 
       navigator('/');
     } catch (error) {
+      toast.dismiss(toastIdRef.current);
+      toast.clearWaitingQueue();
+
+      const options = {
+        theme: isDarkMode ? "dark" : "light",
+        autoClose: 15000
+      }
+
       if (error.response.status === 400) { // invalid credentials
-        toast.error("Invalid credentials!", {
-          theme: isDarkMode ? "dark" : "light",
-          autoClose: 10000
-        })
+        toastIdRef.current = toast.error("Invalid credentials!", options);
       } else if (error.response.status === 403) { // account is not activated, need to check email.
-        toast.info(() => (
+        toastIdRef.current = toast.info(() => (
           <div>
             You need to activate your account to log in, check your inbox for instructions.
             <button
@@ -72,10 +79,7 @@ function Login() {
               Resend Email
             </button>
           </div>
-        ), {
-          theme: isDarkMode ? "dark" : "light",
-          autoClose: 15000
-        })
+        ), options);
       } else {
         navigator(`/internal-server-error`, {
           state: {
@@ -94,8 +98,6 @@ function Login() {
         <Link to="/" className='hidden md:flex items-center ms-4 mt-3 w-fit'>
           <LogoWithText />
         </Link>
-
-        <ToastContainer />
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full mx-auto mt-28 md:mt-16 flex-grow sm:m-0 sm:px-0 sm:w-96 sm:absolute sm:top-[45%] sm:left-[50%] sm:-translate-x-1/2 sm:-translate-y-1/2'>
           <h1 className='transition-all duration-500 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>👋 Welcome back!</h1>

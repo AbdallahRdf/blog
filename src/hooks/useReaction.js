@@ -43,7 +43,20 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
 
     const url = useRef(`/posts/${postId}${commentId ? `/comments/${commentId}` : ''}${replyId ? `/replies/${replyId}` : ''}/reaction`);
 
+    const toastIdRef = useRef(null);
+
     const customAxios = useCustomAxios();
+
+    const showToast = (message, isError = false) => {
+        toast.dismiss(toastIdRef.current);
+        toast.clearWaitingQueue();
+
+        const options = {
+            theme: isDarkMode ? "dark" : "light",
+            pauseOnFocusLoss: false,
+        };
+        toastIdRef.current = isError ? toast.error(message, options) : toast(message, options);
+    }
 
     const getReaction = useCallback(async () => {
         try {
@@ -59,9 +72,7 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
                 setIsLiked(false);
             }
             if (!(error.response && error.response.status < 500)) {
-                toast.error('Failed to fetch your reaction. Please try again.', {
-                    theme: isDarkMode ? "dark" : "light"
-                });
+                showToast('Failed to fetch your reaction. Please try again.', true);
             }
         }
     }, [url]);
@@ -87,18 +98,13 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
             likesCountRef.current = previousLikesCount;
             dislikesCountRef.current = previousDislikesCount;
 
-            toast.error('Failed to save you reaction', {
-                theme: isDarkMode ? "dark" : "light"
-            });
+            showToast('Failed to save you reaction', true);
         }
     }, 5000), []);
 
     const handleLikeClick = () => {
-        console.log("clicked");
         if (!user) {
-            toast('You need to log in to perform this action. Please log in or sign up to continue.', {
-                theme: isDarkMode ? "dark" : "light"
-            });
+            showToast('You need to log in to perform this action. Please log in or sign up to continue.');
             return;
         }
         // the item is disliked, and the like button is clicked
@@ -124,9 +130,7 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
 
     const handleDislikeClick = () => {
         if (!user) {
-            toast('You need to log in to perform this action. Please log in or sign up to continue.', {
-                theme: isDarkMode ? "dark" : "light"
-            });
+            showToast('You need to log in to perform this action. Please log in or sign up to continue.');
             return;
         }
         // the item is liked, and the dislike button is clicked

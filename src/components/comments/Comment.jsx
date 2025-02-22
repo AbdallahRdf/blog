@@ -12,7 +12,7 @@ import CommentsButton from '../commun/CommentsButton'
 import { toast } from 'react-toastify';
 import useCustomAxios from '../../hooks/useCustomAxios';
 
-function CommentBox({ comment, postId }) {
+function Comment({ comment, postId }) {
     const { user } = useContext(AuthContext);
     const { isDarkMode } = useContext(ThemeContext)
 
@@ -136,4 +136,4 @@ function CommentBox({ comment, postId }) {
     )
 }
 
-export default CommentBox
+export default Comment

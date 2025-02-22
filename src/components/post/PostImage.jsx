@@ -6,16 +6,10 @@ import PostImageSkeleton from '../skeletons/PostImageSkeleton';
 
 function PostImage({ path }) {
 
-  const {ref, inView} = useInView({
-    triggerOnce: true,
-    rootMargin: '400px'
-  })
-
-  const { image, isFetching } = useFetchImage(path, inView);
+  const { image, isFetching } = useFetchImage(path);
 
   return (
     <div className='my-6 sm:my-8 '>
-      <div ref={ref}></div>
       {
         isFetching
           ?

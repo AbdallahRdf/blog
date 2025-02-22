@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import CommentBox from './CommentBox'
+import Comment from './Comment'
 import useCustomAxios from '../../hooks/useCustomAxios';
 import { Loader } from 'lucide-react';
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
@@ -58,7 +58,7 @@ function Comments({ postId, sorting, commentsCount, setCommentsCount, inViewForC
             {
                 data.pages[0].comments.length > 0
                     ?
-                    data.pages.map(page => page.comments.map(comment => <CommentBox key={comment._id} comment={comment} postId={postId} />))
+                    data.pages.map(page => page.comments.map(comment => <Comment key={comment._id} comment={comment} postId={postId} />))
                     :
                     <div className='transition-colors duration-500 ease-in-out text-slate-900 dark:text-slate-100 text-lg md:text-2xl text-center my-20'>No Comments</div>
             }

@@ -1,16 +1,16 @@
 import { Mail } from 'lucide-react'
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LoadingPage from '../components/commun/LoadingPage';
 import useCustomAxios from '../hooks/useCustomAxios';
 import { toast } from "react-toastify";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { ThemeContext } from '../context/contexts';
 
 function WaitAccountActivation() {
 
   const { isDarkMode } = useContext(ThemeContext);
+
+  const toastIdRef = useRef(null);
 
   const navigator = useNavigate();
 
@@ -23,7 +23,7 @@ function WaitAccountActivation() {
   const customAxios = useCustomAxios();
 
   useEffect(() => {
-    const timerId = setTimeout(() => setIsDisabled(false),  1000) // disable the send button for 5 minutes
+    const timerId = setTimeout(() => setIsDisabled(false), 1000) // disable the send button for 5 minutes
 
     return () => clearTimeout(timerId);
   }, [isDisabled]);
@@ -33,7 +33,9 @@ function WaitAccountActivation() {
     try {
       await customAxios.post('/auth/account-activation', { email });
       // email was sent successfully;
-      toast.success('Another account activation email was sent successfully!',
+      toast.dismiss(toastIdRef.current);
+      toast.clearWaitingQueue();
+      toastIdRef.current = toast.success('Another account activation email was sent successfully!',
         {
           theme: isDarkMode ? "dark" : "light"
         }
@@ -41,7 +43,7 @@ function WaitAccountActivation() {
     } catch (error) {
       let message = "Server Error";
 
-      if (error.response.status === 400) {        
+      if (error.response.status === 400) {
         message = error.response.data.message;
       } else if (error.response.status === 404) {
         message = `User with email ${email} does not exist!`;
@@ -70,7 +72,6 @@ function WaitAccountActivation() {
     email
       ?
       <div className='flex flex-col justify-end min-h-screen'>
-        <ToastContainer />
 
         <div className='transition-all duration-500 ease-in-out w-80 md:w-96 shadow-lg md:shadow-xl shadow-zinc-300 dark:shadow-none border border-zinc-300 dark:border-zinc-500 rounded-lg py-16 px-6 mx-auto flex flex-col items-center gap-5 md:gap-6 absolute top-1/3 -translate-y-1/3 left-1/2 -translate-x-1/2'>
           <div className='transition-colors duration-500 ease-in-out w-fit p-3 md:p-4 text-zinc-700 dark:text-zinc-300 box-content rounded-full border-4 border-zinc-700 dark:border-zinc-300'>

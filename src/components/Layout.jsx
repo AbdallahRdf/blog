@@ -35,7 +35,7 @@ function Layout() {
                 <div className='w-full max-w-[1280px] relative flex-1'>
                     <Navbar handleSearchClick={handleSearchClick} />
 
-                    <ToastContainer />
+                    <ToastContainer limit={1}/>
 
                     {
                         showSearchBlock

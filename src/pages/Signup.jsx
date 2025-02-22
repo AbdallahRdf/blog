@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AtSign, LoaderCircle, LockIcon, Mail, User } from 'lucide-react'
 import * as yup from 'yup'
@@ -39,6 +39,8 @@ function Signup() {
 
     const { isDarkMode } = useContext(ThemeContext);
 
+    const toastIdRef = useRef(null);
+
     const navigator = useNavigate();
 
     const customAxios = useCustomAxios();
@@ -61,8 +63,10 @@ function Signup() {
                 const errorMessages = error.response.data.errorMessages;
                 Object.keys(errorMessages).forEach(field => setError(field, { message: errorMessages[field] }));
             } else {
+                toast.dismiss(toastIdRef.current);
+                toast.clearWaitingQueue();
                 // server error occured
-                toast.error("An unexpected error occurred. Please try again later.", {
+                toastIdRef.current = toast.error("An unexpected error occurred. Please try again later.", {
                     theme: isDarkMode ? "dark" : "light",
                     autoClose: 10000
                 })
@@ -80,8 +84,6 @@ function Signup() {
             {/* the form */}
             <form onSubmit={handleSubmit(handleFormSubmit)} className='px-3 w-96 max-w-full sm:px-0 sm:w-96 mx-auto mt-10 flex-grow'>
                 <h1 className='transition-all duration-500 ease-in-out text-3xl md:text-4xl font-semibold text-center mb-4 text-neutral-900 dark:text-zinc-50'>Sign up</h1>
-
-                <ToastContainer />
 
                 {/* full name field */}
                 <div className='w-full my-4'>
