@@ -1,18 +1,25 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { CircleUserRound } from 'lucide-react'
 import useCustomAxios from '../../hooks/useCustomAxios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { ThemeContext } from '../../context/contexts';
 
-function CommentFrom({ postId, fetchComments }) {
+function CommentFrom({ postId }) {
+
+    const queryClient = useQueryClient();
+
+    const { isDarkMode } = useContext(ThemeContext)
 
     const customAxios = useCustomAxios();
 
     const textareaRef = useRef(null);
 
-    const [error, setError] = useState(null);
+    const [inputError, setInputError] = useState(null);
     const [showSubmitBtn, setShowSubmitBtn] = useState(false);
 
     const handleCancel = () => {
-        setError(null);
+        setInputError(null);
         setShowSubmitBtn(false);
         textareaRef.current.value = "";
     }
@@ -22,30 +29,46 @@ function CommentFrom({ postId, fetchComments }) {
             textareaRef.current.style.height = "auto";
             textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
             if (textareaRef.current.value.trim() === '') {
-                setError('Comment text is required');
+                setInputError('Comment text is required');
                 setShowSubmitBtn(false);
             } else {
-                setError(null);
+                setInputError(null);
                 setShowSubmitBtn(true);
             }
         }
     }
 
+    const createNewComment = async ({ data }) => {
+        const response = await customAxios.post(`/posts/${postId}/comments`, { body: data });
+        return response?.data;
+    }
+
+    const { mutateAsync } = useMutation({
+        mutationFn: createNewComment,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['comments', postId]);
+        },
+        onError: (error) => {
+            toast.error("Oops! We couldn't save your comment. Please try again.", {
+                theme: isDarkMode ? "dark" : "light",
+                pauseOnFocusLoss: false,
+            });
+        }
+    });
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const data = textareaRef.current.value.trim();
         if (data === '') {
-            setError('Comment text is required');
+            setInputError('Comment text is required');
             setShowSubmitBtn(false);
             return;
         }
-
         try {
-            await customAxios.post(`/posts/${postId}/comments`, { body: data });
-            fetchComments();
+            await mutateAsync({ data },);
             handleCancel();
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -63,7 +86,7 @@ function CommentFrom({ postId, fetchComments }) {
                     placeholder='Write a comment...'
                 ></textarea>
             </div>
-            {error && <small className='transition-colors duration-500 ease-in-out text-red-500 dark:text-red-400 text-sm md:text-base ms-10 md:ms-14'>{error}</small>}
+            {inputError && <small className='transition-colors duration-500 ease-in-out text-red-500 dark:text-red-400 text-sm md:text-base ms-10 md:ms-14'>{inputError}</small>}
             {
                 showSubmitBtn
                 &&

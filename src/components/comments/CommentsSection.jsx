@@ -40,10 +40,7 @@ function CommentsSection({ postId }) {
                         </label>
                         <select
                             value={sorting}
-                            onChange={(e) => {
-                                setSorting(e.target.value);
-                                refetch();
-                            }}
+                            onChange={(e) => setSorting(e.target.value) }
                             className='py-1 ps-1 sm:ps-2 pe-2 bg-transparent text-mg sm:text-lg cursor-pointer transition-colors duration-500 ease-in-out bg-zinc-50 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-50'
                         >
                             <option value='latest'>Latest</option>
@@ -56,7 +53,7 @@ function CommentsSection({ postId }) {
 
                 <div ref={refForCommentsLazyLoading}></div>
 
-                {user && <CommentFrom postId={postId} fetchComments={fetchComments} />}
+                {user && <CommentFrom postId={postId} />}
 
                 <ErrorBoundary
                     onReset={() => {

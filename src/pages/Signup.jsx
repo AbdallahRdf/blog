@@ -56,7 +56,6 @@ function Signup() {
             // if request succeeded, a verification email is sent;
             await customAxios.post(`/auth/register`, data);
             navigator('/auth/account-activation', { state: { email: data.email } });
-
         } catch (error) {
             // input validation failed on the server, show error messages
             if (error.response && error.response.status === 400) {
