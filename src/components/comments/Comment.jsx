@@ -1,6 +1,6 @@
-import { ChevronDown, ChevronUp, CircleUserRoundIcon, Ellipsis } from 'lucide-react'
-import React, { useContext, useState } from 'react'
-import ReplyBox from './ReplyBox';
+import { ChevronDown, ChevronUp, CircleUserRoundIcon, Ellipsis, Loader } from 'lucide-react'
+import React, { useContext, useRef, useState } from 'react'
+import Reply from './Reply';
 import { formatDate } from '../../utils/formatter';
 import { AuthContext, ThemeContext } from '../../context/contexts';
 import userRoles from '../../enums/userRoles';
@@ -11,32 +11,34 @@ import DislikeButton from '../commun/DislikeButton';
 import CommentsButton from '../commun/CommentsButton'
 import { toast } from 'react-toastify';
 import useCustomAxios from '../../hooks/useCustomAxios';
+import { useInfiniteQuery } from '@tanstack/react-query';
+
+const LIMIT = 2; // number of replies to fetch
 
 function Comment({ comment, postId }) {
     const { user } = useContext(AuthContext);
-    const { isDarkMode } = useContext(ThemeContext)
+    const { isDarkMode } = useContext(ThemeContext);
+
+    const toastIdRef = useRef(null);
 
     const customAxios = useCustomAxios();
 
-    const { likesCount, dislikesCount, isLiked, isDisliked, handleLikeClick, handleDislikeClick } = useReaction(comment.likes, comment.dislikes, postId, comment._id);
+    const { likesCount, dislikesCount, isLiked, isDisliked, handleLikeClick, handleDislikeClick } = useReaction(
+        comment.likes,
+        comment.dislikes,
+        postId,
+        comment._id
+    );
+
+    const [enabled, setEnabled] = useState(false);
 
     const [isRepliesOpen, setIsRepliesOpen] = useState(false);
 
     const [showReplyForm, setShowReplyForm] = useState(false);
 
-    const [replies, setReplies] = useState(null)
-
-    //TODO: fetch replies
-    const fetchReplies = async () => {
-        const response = await customAxios.get(`/posts/${postId}/comments/${comment._id}/replies`)
-        setReplies(response.data.replies)
-    }
-
-    const handleRepliesBtnClick = () => {
-        setIsRepliesOpen(prev => !prev)
-        if (!isRepliesOpen && replies === null) {
-            fetchReplies()
-        }
+    const fetchReplies = async ({ pageParam }) => {
+        const response = await customAxios.get(`/posts/${postId}/comments/${comment._id}/replies?limit=${LIMIT}${pageParam ? `&cursor=${pageParam}` : ''}`);
+        return response?.data;
     }
 
     // show reply form if user is logged in else show toast
@@ -44,11 +46,21 @@ function Comment({ comment, postId }) {
         if (user) {
             setShowReplyForm(prev => !prev);
         } else {
-            toast('You need to log in to perform this action. Please log in or sign up to continue.', {
+            toast.dismiss(toastIdRef.current);
+            toast.clearWaitingQueue();
+            toastIdRef.current = toast('You need to log in to perform this action. Please log in or sign up to continue.', {
                 theme: isDarkMode ? "dark" : "light"
             });
         }
     }
+
+    const { data, error, status, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
+        queryKey: ["replies", postId, comment._id],
+        queryFn: fetchReplies,
+        initialPageParam: null,
+        getNextPageParam: (lastPage, allPages) => lastPage?.cursor,
+        enabled: enabled
+    })
 
     return (
         <>
@@ -61,7 +73,7 @@ function Comment({ comment, postId }) {
                 {/* comment box */}
                 <div className='transition-colors duration-500 ease-in-out flex-grow relative py-4 ps-3'>
                     <p className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 font-semibold text-sm md:text-lg'>{comment.owner.username}</p>
-                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-300 font-normal text-xs sm:text-base'>{formatDate(comment.createdAt)}</p>
+                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-base'>{formatDate(comment.createdAt)}</p>
                     <p className='transition-colors duration-500 ease-in-out text-sm md:text-lg text-zinc-800 dark:text-zinc-200 my-1 sm:my-3'>{comment.body}</p>
 
                     {/* likes and replies */}
@@ -88,7 +100,7 @@ function Comment({ comment, postId }) {
                             title='Reply'
                             className='transition-colors duration-500 ease-in-out flex gap-x-2 items-center hover:bg-slate-200 dark:hover:bg-slate-800 text-zinc-800 dark:text-zinc-200 rounded-xl p-1'
                         >
-                            <CommentsButton comments={comment.replies} iconClassName="inline size-4 md:size-5" countClassName="text-sm md:text-base" />
+                            <CommentsButton comments={data?.pages[0].repliesCount || comment.replies} iconClassName="inline size-4 md:size-5" countClassName="text-sm md:text-base" />
                         </button>
 
                         {
@@ -96,7 +108,10 @@ function Comment({ comment, postId }) {
                             &&
                             <button
                                 title={isRepliesOpen ? 'Hide replies' : 'Show replies'}
-                                onClick={handleRepliesBtnClick}
+                                onClick={() => {
+                                    setEnabled(prev => !prev);
+                                    setIsRepliesOpen(prev => !prev);
+                                }}
                                 className='transition-colors duration-500 ease-in-out flex text-blue-500 dark:text-blue-400 gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full p-2'
                             >
                                 {
@@ -112,6 +127,7 @@ function Comment({ comment, postId }) {
 
                     {/* options */}
                     {
+                        //todo: make his work
                         // if user is the owner of the comment or user is not a normal user
                         (user && (user.id === comment.owner._id || user.role !== userRoles.USER))
                         &&
@@ -126,12 +142,56 @@ function Comment({ comment, postId }) {
             {
                 showReplyForm
                 &&
-                <ReplyForm replyToUser={comment.owner} setShowReplyForm={setShowReplyForm} fetchReplies={fetchReplies} postId={postId} commentId={comment._id} />
+                <ReplyForm parentUsername={comment.owner.username} setShowReplyForm={setShowReplyForm} postId={postId} commentId={comment._id} />
             }
 
+            {/* replies */}
             <div className={`${isRepliesOpen ? "block" : "hidden"}`}>
-                { replies?.map(reply => <ReplyBox key={reply._id} postId={postId} commentId={comment._id} reply={reply} />) }
+                {
+                    data === undefined && isFetching
+                        ?
+                        <div className='text-zinc-950 dark:text-zinc-50'>
+                            <Loader className='animate-spin size-7 mx-auto' />
+                        </div>
+                        :
+                        data?.pages.map(page => page.replies.map(reply => <Reply key={reply._id} postId={postId} commentId={comment._id} reply={reply} />))
+                }
             </div>
+
+            {
+                isFetchingNextPage && hasNextPage
+                &&
+                <div className='text-zinc-950 dark:text-zinc-50'>
+                    <Loader className='animate-spin size-7 mx-auto' />
+                </div>
+            }
+
+            {
+                isRepliesOpen
+                &&
+                <button
+                    onClick={hasNextPage ? fetchNextPage : () => {
+                        setEnabled(prev => !prev);
+                        setIsRepliesOpen(false)
+                    }}
+                    disabled={isFetchingNextPage}
+                    className='transition-colors duration-500 ease-in-out text-blue-500 dark:text-blue-400 hover:underline p-2 rounded-md flex items-center gap-2 color ms-12 md:ms-24 my-3'
+                >
+                    {
+                        hasNextPage
+                            ?
+                            <>
+                                <span>Load more replies</span>
+                                <ChevronDown />
+                            </>
+                            :
+                            <>
+                                <span>Collapse replies</span>
+                                <ChevronUp />
+                            </>
+                    }
+                </button>
+            }
         </>
     )
 }

@@ -13,7 +13,7 @@ function ReplyBox({ postId, commentId, reply }) {
         <div className='relative flex items-start ms-8 md:ms-12'>
             {/* user avatar */}
             <button className='mt-4'>
-                <CircleUserRoundIcon className='transition-colors duration-500 ease-in-out size-9 md:size-12 text-zinc-600 dark:text-zinc-200' />
+                <CircleUserRoundIcon className='transition-colors duration-500 ease-in-out size-7 md:size-10 text-zinc-600 dark:text-zinc-200' />
             </button>
 
             {/* reply box */}

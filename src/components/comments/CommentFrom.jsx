@@ -15,6 +15,8 @@ function CommentFrom({ postId }) {
 
     const textareaRef = useRef(null);
 
+    const toastIdRef = useRef(null);
+
     const [inputError, setInputError] = useState(null);
     const [showSubmitBtn, setShowSubmitBtn] = useState(false);
 
@@ -49,7 +51,9 @@ function CommentFrom({ postId }) {
             queryClient.invalidateQueries(['comments', postId]);
         },
         onError: (error) => {
-            toast.error("Oops! We couldn't save your comment. Please try again.", {
+            toast.dismiss(toastIdRef.current);
+            toast.clearWaitingQueue();
+            toastIdRef.current = toast.error("Oops! We couldn't save your comment. Please try again.", {
                 theme: isDarkMode ? "dark" : "light",
                 pauseOnFocusLoss: false,
             });
@@ -81,7 +85,7 @@ function CommentFrom({ postId }) {
                 <textarea
                     ref={textareaRef}
                     onChange={handleChange}
-                    className='transition-colors duration-500 ease-in-out resize-none text-lg bg-transparent border-b border-slate-400 focus:border-b dark:focus:border-slate-50 focus:border-slate-700 w-full focus:outline-none text-zinc-800 dark:text-zinc-100'
+                    className='transition-colors duration-500 ease-in-out text-sm md:text-lg resize-none bg-transparent border-b border-slate-400 focus:border-b dark:focus:border-slate-50 focus:border-slate-700 w-full focus:outline-none text-zinc-800 dark:text-zinc-100'
                     rows={1}
                     placeholder='Write a comment...'
                 ></textarea>
