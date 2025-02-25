@@ -43,7 +43,7 @@ export default function App() {
         const jwtBodyBase64 = token.split('.')[1];
         jwtBody = JSON.parse(atob(jwtBodyBase64));
       } catch (error) {
-        console.log('app component: ' + error.message);
+        console.log('App component: ' + error.message);
       } finally {
         setAccessToken(token);
         setUser(jwtBody)

@@ -1,8 +1,9 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import useCustomAxios from "./useCustomAxios";
-import { AuthContext, ThemeContext } from "../context/contexts";
+import { AuthContext } from "../context/contexts";
 import { toast } from "react-toastify";
 import debounce from '../utils/debounce';
+import useToast from "./useToast";
 
 /**
  * Custom hook to manage likes and dislikes for a post, comment, or reply.
@@ -27,7 +28,6 @@ import debounce from '../utils/debounce';
 const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) => {
 
     const { user, setAccessToken } = useContext(AuthContext);
-    const { isDarkMode } = useContext(ThemeContext)
 
     const [isLiked, setIsLiked] = useState(false);
     const [isDisliked, setIsDisliked] = useState(false);
@@ -43,20 +43,9 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
 
     const url = useRef(`/posts/${postId}${commentId ? `/comments/${commentId}` : ''}${replyId ? `/replies/${replyId}` : ''}/reaction`);
 
-    const toastIdRef = useRef(null);
-
     const customAxios = useCustomAxios();
 
-    const showToast = (message, isError = false) => {
-        toast.dismiss(toastIdRef.current);
-        toast.clearWaitingQueue();
-
-        const options = {
-            theme: isDarkMode ? "dark" : "light",
-            pauseOnFocusLoss: false,
-        };
-        toastIdRef.current = isError ? toast.error(message, options) : toast(message, options);
-    }
+    const { showToast } = useToast();
 
     const getReaction = useCallback(async () => {
         try {
@@ -72,7 +61,7 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
                 setIsLiked(false);
             }
             if (!(error.response && error.response.status < 500)) {
-                showToast('Failed to fetch your reaction. Please try again.', true);
+                showToast('Failed to fetch your reaction. Please try again.', toast.error);
             }
         }
     }, [url]);
@@ -98,7 +87,7 @@ const useReaction = (likes, dislikes, postId, commentId = null, replyId = null) 
             likesCountRef.current = previousLikesCount;
             dislikesCountRef.current = previousDislikesCount;
 
-            showToast('Failed to save you reaction', true);
+            showToast('Failed to save you reaction', toast.error);
         }
     }, 5000), []);
 

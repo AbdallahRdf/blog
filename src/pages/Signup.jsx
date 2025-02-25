@@ -10,6 +10,7 @@ import InputErrorMessage from '../components/commun/InputErrorMessage'
 import useCustomAxios from '../hooks/useCustomAxios'
 import { ThemeContext } from '../context/contexts'
 import { toast, ToastContainer } from 'react-toastify'
+import useToast from '../hooks/useToast'
 
 const schema = yup.object().shape({
     fullName: yup
@@ -39,7 +40,7 @@ function Signup() {
 
     const { isDarkMode } = useContext(ThemeContext);
 
-    const toastIdRef = useRef(null);
+    const { showToast } = useToast();
 
     const navigator = useNavigate();
 
@@ -62,13 +63,8 @@ function Signup() {
                 const errorMessages = error.response.data.errorMessages;
                 Object.keys(errorMessages).forEach(field => setError(field, { message: errorMessages[field] }));
             } else {
-                toast.dismiss(toastIdRef.current);
-                toast.clearWaitingQueue();
                 // server error occured
-                toastIdRef.current = toast.error("An unexpected error occurred. Please try again later.", {
-                    theme: isDarkMode ? "dark" : "light",
-                    autoClose: 10000
-                })
+                showToast("An unexpected error occurred. Please try again later.", toast.error);
             }
         }
     }

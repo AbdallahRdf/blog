@@ -4,6 +4,7 @@ import useCustomAxios from '../../hooks/useCustomAxios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { ThemeContext } from '../../context/contexts';
+import useToast from '../../hooks/useToast';
 
 function CommentFrom({ postId }) {
 
@@ -15,7 +16,7 @@ function CommentFrom({ postId }) {
 
     const textareaRef = useRef(null);
 
-    const toastIdRef = useRef(null);
+    const { showToast } = useToast();
 
     const [inputError, setInputError] = useState(null);
     const [showSubmitBtn, setShowSubmitBtn] = useState(false);
@@ -51,12 +52,7 @@ function CommentFrom({ postId }) {
             queryClient.invalidateQueries(['comments', postId]);
         },
         onError: (error) => {
-            toast.dismiss(toastIdRef.current);
-            toast.clearWaitingQueue();
-            toastIdRef.current = toast.error("Oops! We couldn't save your comment. Please try again.", {
-                theme: isDarkMode ? "dark" : "light",
-                pauseOnFocusLoss: false,
-            });
+            showToast("Oops! We couldn't save your comment. Please try again." ,toast.error);
         }
     });
 

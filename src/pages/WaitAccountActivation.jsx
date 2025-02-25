@@ -5,12 +5,13 @@ import LoadingPage from '../components/commun/LoadingPage';
 import useCustomAxios from '../hooks/useCustomAxios';
 import { toast } from "react-toastify";
 import { ThemeContext } from '../context/contexts';
+import useToast from '../hooks/useToast';
 
 function WaitAccountActivation() {
 
   const { isDarkMode } = useContext(ThemeContext);
 
-  const toastIdRef = useRef(null);
+  const { showToast } = useToast();
 
   const navigator = useNavigate();
 
@@ -33,13 +34,7 @@ function WaitAccountActivation() {
     try {
       await customAxios.post('/auth/account-activation', { email });
       // email was sent successfully;
-      toast.dismiss(toastIdRef.current);
-      toast.clearWaitingQueue();
-      toastIdRef.current = toast.success('Another account activation email was sent successfully!',
-        {
-          theme: isDarkMode ? "dark" : "light"
-        }
-      );
+      showToast('Another account activation email was sent successfully!', toast.success);
     } catch (error) {
       let message = "Server Error";
 

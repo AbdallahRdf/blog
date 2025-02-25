@@ -1,17 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CircleUserRound } from 'lucide-react'
 import useCustomAxios from '../../hooks/useCustomAxios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useToast from '../../hooks/useToast';
 import { toast } from 'react-toastify';
 
-function ReplyForm({ parentUsername, setShowReplyForm, postId, commentId, replyId = null }) {
+function ReplyForm({ replyUsername, setShowReplyForm, postId, commentId, replyId = null }) {
 
     const queryClient = useQueryClient();
 
     const customAxios = useCustomAxios();
 
     const textareaRef = useRef(null);
+    const [replyText, setReplyText] = useState(replyUsername);
 
     const { showToast } = useToast();
 
@@ -19,34 +20,36 @@ function ReplyForm({ parentUsername, setShowReplyForm, postId, commentId, replyI
     const [isDisabled, setIsDisabled] = useState(true);
 
     const handleCancel = () => {
-        textareaRef.current.value = "";
+        setReplyText(replyUsername);
         setShowReplyForm(false);
     }
 
     // adjust the height of the textarea based on the content and check if the textarea is empty or not to enable or disable the submit button
-    const handleChange = () => {
+    const handleChange = (e) => {
+        if (!e.target.value.includes(replyUsername) && e.target.value.trim() !== '') {
+            !error && setError('Comment text is required');
+            !isDisabled && setIsDisabled(true);
+            return;
+        }
+        error && setError(null);
+        isDisabled && setIsDisabled(false);
+        e.target.value.trim() !== '' ? setReplyText(e.target.value) : setReplyText(replyUsername);
+        
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto";
             textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-            if (textareaRef.current.value.trim() !== '') {
-                setError(null);
-                setIsDisabled(false);
-            } else {
-                setError('Comment text is required');
-                setIsDisabled(true);
-            }
         }
     }
 
-    const createNewReply = async ({ parentUsername, replyText }) => {
-        const response = await customAxios.post(`/posts/${postId}/comments/${commentId}/replies`, { parentUsername, body: replyText });
+    const createNewReply = async ({ replyUsername, replyText}) => {
+        const response = await customAxios.post(`/posts/${postId}/comments/${commentId}/replies`, { replyId: replyId ?? commentId, replyUsername, body: replyText.trim() });
         return response?.data;
     }
 
     const { mutateAsync } = useMutation({
         mutationFn: createNewReply,
         onSuccess: () => {
-            queryClient.invalidateQueries("replies", postId, commentId);
+            queryClient.invalidateQueries(["replies", postId, commentId]);
         },
         onError: (error) => {
             showToast("Oops! We couldn't save your comment. Please try again.", toast.error);
@@ -55,13 +58,8 @@ function ReplyForm({ parentUsername, setShowReplyForm, postId, commentId, replyI
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const replyText = textareaRef.current.value.trim();
-        if (replyText === '') {
-            setError('Comment text is required');
-            return;
-        }
         try {
-            await mutateAsync({ parentUsername, replyText });
+            await mutateAsync({ replyUsername, replyText });
             handleCancel();
         } catch (error) {
             console.log(error);
@@ -69,13 +67,14 @@ function ReplyForm({ parentUsername, setShowReplyForm, postId, commentId, replyI
     }
 
     return (
-        <form onSubmit={handleFormSubmit} className='ms-8 md:ms-12 my-4'>
-            <div className='flex items-center gap-3'>
+        <form onSubmit={handleFormSubmit} className='ms-8 md:ms-12'>
+            <div className='flex items-start gap-3'>
                 <button>
-                    <CircleUserRound className='transition-colors duration-500 ease-in-out size-9 md:size-12 text-zinc-600 dark:text-zinc-200' />
+                    <CircleUserRound className='transition-colors duration-500 ease-in-out size-7 md:size-10 text-zinc-600 dark:text-zinc-200' />
                 </button>
                 <textarea
                     ref={textareaRef}
+                    value={replyText}
                     onChange={handleChange}
                     className='transition-colors duration-500 ease-in-out text-sm md:text-lg resize-none bg-transparent border-b border-slate-400 focus:border-b dark:focus:border-slate-50 focus:border-slate-700 w-full focus:outline-none text-zinc-800 dark:text-zinc-100'
                     rows={1}

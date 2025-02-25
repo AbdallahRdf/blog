@@ -1,25 +1,24 @@
 import { ChevronDown, ChevronUp, CircleUserRoundIcon, Ellipsis, Loader } from 'lucide-react'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Reply from './Reply';
 import { formatDate } from '../../utils/formatter';
-import { AuthContext, ThemeContext } from '../../context/contexts';
+import { AuthContext } from '../../context/contexts';
 import userRoles from '../../enums/userRoles';
 import useReaction from '../../hooks/useReaction';
 import ReplyForm from './ReplyForm';
 import LikeButton from '../commun/LikeButton';
 import DislikeButton from '../commun/DislikeButton';
-import CommentsButton from '../commun/CommentsButton'
-import { toast } from 'react-toastify';
 import useCustomAxios from '../../hooks/useCustomAxios';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import ReplyButton from './ReplyButton';
+import useToast from '../../hooks/useToast';
 
-const LIMIT = 2; // number of replies to fetch
+const LIMIT = 15; // number of replies to fetch
 
 function Comment({ comment, postId }) {
     const { user } = useContext(AuthContext);
-    const { isDarkMode } = useContext(ThemeContext);
 
-    const toastIdRef = useRef(null);
+    const { showToast } = useToast();
 
     const customAxios = useCustomAxios();
 
@@ -46,11 +45,7 @@ function Comment({ comment, postId }) {
         if (user) {
             setShowReplyForm(prev => !prev);
         } else {
-            toast.dismiss(toastIdRef.current);
-            toast.clearWaitingQueue();
-            toastIdRef.current = toast('You need to log in to perform this action. Please log in or sign up to continue.', {
-                theme: isDarkMode ? "dark" : "light"
-            });
+            showToast('You need to log in to perform this action. Please log in or sign up to continue.');
         }
     }
 
@@ -66,15 +61,15 @@ function Comment({ comment, postId }) {
         <>
             <div className='relative flex items-start'>
                 {/* user avatar */}
-                <button className='mt-4'>
+                <button className='mt-3'>
                     <CircleUserRoundIcon className='transition-colors duration-500 ease-in-out size-9 md:size-12 text-zinc-800 dark:text-zinc-200' />
                 </button>
 
                 {/* comment box */}
-                <div className='transition-colors duration-500 ease-in-out flex-grow relative py-4 ps-3'>
+                <div className='transition-colors duration-500 ease-in-out flex-grow relative py-2 ps-3'>
                     <p className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 font-semibold text-sm md:text-lg'>{comment.owner.username}</p>
-                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-base'>{formatDate(comment.createdAt)}</p>
-                    <p className='transition-colors duration-500 ease-in-out text-sm md:text-lg text-zinc-800 dark:text-zinc-200 my-1 sm:my-3'>{comment.body}</p>
+                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-sm'>{formatDate(comment.createdAt)}</p>
+                    <p className='transition-colors duration-500 ease-in-out text-sm md:text-lg text-zinc-800 dark:text-zinc-200 my-1'>{comment.body}</p>
 
                     {/* likes and replies */}
                     <div className='flex gap-5'>
@@ -95,13 +90,7 @@ function Comment({ comment, postId }) {
                             countClassName="text-sm md:text-base"
                         />
 
-                        <button
-                            onClick={handleClick}
-                            title='Reply'
-                            className='transition-colors duration-500 ease-in-out flex gap-x-2 items-center hover:bg-slate-200 dark:hover:bg-slate-800 text-zinc-800 dark:text-zinc-200 rounded-xl p-1'
-                        >
-                            <CommentsButton comments={data?.pages[0].repliesCount || comment.replies} iconClassName="inline size-4 md:size-5" countClassName="text-sm md:text-base" />
-                        </button>
+                        <ReplyButton handleClick={handleClick} />
 
                         {
                             comment.replies > 0
@@ -112,15 +101,16 @@ function Comment({ comment, postId }) {
                                     setEnabled(prev => !prev);
                                     setIsRepliesOpen(prev => !prev);
                                 }}
-                                className='transition-colors duration-500 ease-in-out flex text-blue-500 dark:text-blue-400 gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full p-2'
+                                className='transition-colors duration-500 ease-in-out flex text-blue-500 dark:text-blue-400 gap-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full py-2 px-1'
                             >
                                 {
                                     isRepliesOpen
                                         ?
-                                        <ChevronUp />
+                                        <ChevronUp className='size-5 sm:size-6' />
                                         :
-                                        <ChevronDown />
+                                        <ChevronDown className='size-5 sm:size-6' />
                                 }
+                                <span className="text-sm md:text-base">{comment.replies === 1 ? `${comment.replies} reply` : `${comment.replies} replies`}</span>
                             </button>
                         }
                     </div>
@@ -142,7 +132,7 @@ function Comment({ comment, postId }) {
             {
                 showReplyForm
                 &&
-                <ReplyForm parentUsername={comment.owner.username} setShowReplyForm={setShowReplyForm} postId={postId} commentId={comment._id} />
+                <ReplyForm replyUsername={comment.owner.username} setShowReplyForm={setShowReplyForm} postId={postId} commentId={comment._id} />
             }
 
             {/* replies */}
@@ -167,29 +157,15 @@ function Comment({ comment, postId }) {
             }
 
             {
-                isRepliesOpen
+                isRepliesOpen && hasNextPage
                 &&
                 <button
-                    onClick={hasNextPage ? fetchNextPage : () => {
-                        setEnabled(prev => !prev);
-                        setIsRepliesOpen(false)
-                    }}
+                    onClick={fetchNextPage}
                     disabled={isFetchingNextPage}
-                    className='transition-colors duration-500 ease-in-out text-blue-500 dark:text-blue-400 hover:underline p-2 rounded-md flex items-center gap-2 color ms-12 md:ms-24 my-3'
+                    className='transition-colors duration-500 ease-in-out text-blue-500 dark:text-blue-400 hover:underline p-2 rounded-md flex items-center gap-1 color ms-12 md:ms-24'
                 >
-                    {
-                        hasNextPage
-                            ?
-                            <>
-                                <span>Load more replies</span>
-                                <ChevronDown />
-                            </>
-                            :
-                            <>
-                                <span>Collapse replies</span>
-                                <ChevronUp />
-                            </>
-                    }
+                    <span>Load more replies</span>
+                    <ChevronDown className='hover:bg-blue-100 dark:hover:bg-blue-950 rounded-full p-1 size-6 sm:size-8' />
                 </button>
             }
         </>

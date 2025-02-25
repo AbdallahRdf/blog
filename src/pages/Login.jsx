@@ -9,6 +9,7 @@ import { useContext, useRef } from 'react'
 import { AuthContext, ThemeContext } from '../context/contexts'
 import useCustomAxios from '../hooks/useCustomAxios'
 import { toast } from 'react-toastify'
+import useToast from '../hooks/useToast'
 
 const schema = yup.object().shape({
   email: yup
@@ -26,7 +27,7 @@ function Login() {
 
   const { isDarkMode } = useContext(ThemeContext);
 
-  const toastIdRef = useRef(null);
+  const { showToast } = useToast();
 
   const navigator = useNavigate();
 
@@ -58,18 +59,10 @@ function Login() {
 
       navigator('/');
     } catch (error) {
-      toast.dismiss(toastIdRef.current);
-      toast.clearWaitingQueue();
-
-      const options = {
-        theme: isDarkMode ? "dark" : "light",
-        autoClose: 15000
-      }
-
       if (error.response.status === 400) { // invalid credentials
-        toastIdRef.current = toast.error("Invalid credentials!", options);
+        showToast("Invalid credentials!", toast.error);
       } else if (error.response.status === 403) { // account is not activated, need to check email.
-        toastIdRef.current = toast.info(() => (
+        showToast(() => (
           <div>
             You need to activate your account to log in, check your inbox for instructions.
             <button
@@ -79,7 +72,7 @@ function Login() {
               Resend Email
             </button>
           </div>
-        ), options);
+        ), toast.info);
       } else {
         navigator(`/internal-server-error`, {
           state: {
