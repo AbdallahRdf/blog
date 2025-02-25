@@ -2,7 +2,7 @@ import { ChevronDown, ChevronUp, CircleUserRoundIcon, Ellipsis, Loader } from 'l
 import React, { useContext, useState } from 'react'
 import Reply from './Reply';
 import { formatDate } from '../../utils/formatter';
-import { AuthContext } from '../../context/contexts';
+import { AuthContext, PostAuthorContext } from '../../context/contexts';
 import userRoles from '../../enums/userRoles';
 import useReaction from '../../hooks/useReaction';
 import ReplyForm from './ReplyForm';
@@ -12,11 +12,13 @@ import useCustomAxios from '../../hooks/useCustomAxios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import ReplyButton from './ReplyButton';
 import useToast from '../../hooks/useToast';
+import AuthorTag from './AuthorTag';
 
 const LIMIT = 15; // number of replies to fetch
 
 function Comment({ comment, postId }) {
     const { user } = useContext(AuthContext);
+    const { author } = useContext(PostAuthorContext);
 
     const { showToast } = useToast();
 
@@ -67,8 +69,17 @@ function Comment({ comment, postId }) {
 
                 {/* comment box */}
                 <div className='transition-colors duration-500 ease-in-out flex-grow relative py-2 ps-3'>
-                    <p className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 font-semibold text-sm md:text-lg'>{comment.owner.username}</p>
-                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-sm'>{formatDate(comment.createdAt)}</p>
+                    <p className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 font-semibold text-sm md:text-lg'>
+                        {comment.owner.username}
+                        {
+                            author === comment.owner._id
+                            &&
+                            <AuthorTag />
+                        }
+                    </p>
+                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-sm'>
+                        {formatDate(comment.createdAt)}
+                    </p>
                     <p className='transition-colors duration-500 ease-in-out text-sm md:text-lg text-zinc-800 dark:text-zinc-200 my-1'>{comment.body}</p>
 
                     {/* likes and replies */}

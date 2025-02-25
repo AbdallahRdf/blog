@@ -10,6 +10,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import useCustomAxios from '../../hooks/useCustomAxios';
 import { useNavigate, useParams } from 'react-router-dom';
 import CommentsSection from '../comments/CommentsSection';
+import { PostAuthorContext } from '../../context/contexts';
 
 function PostSection() {
 
@@ -65,7 +66,9 @@ function PostSection() {
                     <SideMenu author={post.author} headers={post.headers} tags={post.tags} />
                 </div>
             </div>
-            <CommentsSection postId={post._id} />
+            <PostAuthorContext.Provider value={{ author: post.author._id }}>
+                <CommentsSection postId={post._id} />
+            </PostAuthorContext.Provider>
         </>
     )
 }

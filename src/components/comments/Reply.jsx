@@ -6,8 +6,9 @@ import LikeButton from '../commun/LikeButton';
 import DislikeButton from '../commun/DislikeButton';
 import ReplyButton from './ReplyButton';
 import useToast from '../../hooks/useToast';
-import { AuthContext } from '../../context/contexts';
+import { AuthContext, PostAuthorContext } from '../../context/contexts';
 import ReplyForm from './ReplyForm';
+import AuthorTag from './AuthorTag';
 
 function ReplyBox({ postId, commentId, reply }) {
 
@@ -20,6 +21,7 @@ function ReplyBox({ postId, commentId, reply }) {
     );
 
     const { user } = useContext(AuthContext);
+    const { author } = useContext(PostAuthorContext);
 
     const [showReplyForm, setShowReplyForm] = useState(false);
 
@@ -44,8 +46,17 @@ function ReplyBox({ postId, commentId, reply }) {
 
                 {/* reply box */}
                 <div className='transition-colors duration-500 ease-in-out flex-grow relative p-2'>
-                    <p className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 font-semibold text-xs md:text-base'>{reply.owner.username}</p>
-                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-sm'>{formatDate(reply.createdAt)}</p>
+                    <p className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 font-semibold text-xs md:text-base'>
+                        {reply.owner.username}
+                        {
+                            author === reply.owner._id
+                            &&
+                            <AuthorTag />
+                        }
+                    </p>
+                    <p className='transition-colors duration-500 ease-in-out text-zinc-600 dark:text-zinc-400 font-normal text-xs sm:text-sm'>
+                        {formatDate(reply.createdAt)}
+                    </p>
                     <p className='transition-colors duration-500 ease-in-out text-sm md:text-lg text-zinc-800 dark:text-zinc-200 my-1'>
                         {
                             reply.body.split(' ').map((word) => {
