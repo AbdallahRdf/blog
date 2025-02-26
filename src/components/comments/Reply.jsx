@@ -38,9 +38,9 @@ function ReplyBox({ postId, commentId, reply }) {
         }
     }
 
-    const replyText = reply.body.split(' ').map((word) => {
+    const replyText = reply.body.split(' ').map((word, index) => {
         if (word === reply.replyUsername) {
-            return <a href={`/users/${word}`} className='font-bold text-blue-500 hover:underline'> {word} </a>
+            return <a key={index} href={`/users/${word}`} className='font-bold text-blue-500 hover:underline'> {word} </a>
         }
         return `${word} `;
     });
@@ -97,7 +97,14 @@ function ReplyBox({ postId, commentId, reply }) {
                         // if user is the owner of the comment or user is not a normal user
                         (user && (user.id === reply.owner._id || user.role !== userRoles.USER))
                         &&
-                        <Options postId={postId} commentId={commentId} replyId={reply._id} commentText={replyText} />
+                        <Options
+                            ownerId={reply.owner._id}
+                            postId={postId}
+                            commentId={commentId}
+                            replyId={reply._id}
+                            commentText={reply.body}
+                            replyUsername={reply.replyUsername}
+                        />
                     }
                 </div>
             </div>

@@ -134,7 +134,12 @@ function Comment({ comment, postId }) {
                         // if user is the owner of the comment or user is not a normal user
                         (user && (user.id === comment.owner._id || user.role !== userRoles.USER))
                         &&
-                        <Options postId={postId} commentId={comment._id} commentText={comment.body} />
+                        <Options 
+                            ownerId={comment.owner._id}
+                            postId={postId} 
+                            commentId={comment._id} 
+                            commentText={comment.body} 
+                        />
                     }
                 </div>
             </div>

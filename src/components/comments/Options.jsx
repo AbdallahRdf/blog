@@ -1,10 +1,14 @@
 import { Ellipsis, PenBoxIcon, Trash } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import DeleteModal from './DeleteModal';
 import UpdateModal from './UpdateModal';
+import { AuthContext } from '../../context/contexts';
 
-function Options({ postId, commentId, commentText, replyId = null }) {
+function Options({ ownerId, postId, commentId, commentText, replyId = null, replyUsername = null }) {
+
+    const { user } = useContext(AuthContext);
+
     const [showOptions, setShowOptions] = useState(false);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -69,13 +73,18 @@ function Options({ postId, commentId, commentText, replyId = null }) {
                     transition={{ duration: 0.1 }}
                     className='transition-all duration-500 ease-in-out absolute right-7 sm:right-9 top-4 sm:top-5 flex flex-col bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-xl w-fit overflow-hidden'
                 >
-                    <button
-                        openEditModal={openEditModal}
-                        className='transition-all duration-500 ease-in-out py-2 px-6 flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
-                    >
-                        <PenBoxIcon className='inline size-4 sm:size-5' />
-                        edit
-                    </button>
+                    {
+                        (user.id === ownerId)
+                        &&
+                        <button
+                            onClick={openEditModal}
+                            className='transition-all duration-500 ease-in-out py-2 px-6 flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                        >
+                            <PenBoxIcon className='inline size-4 sm:size-5' />
+                            edit
+                        </button>
+                    }
+
                     <button
                         onClick={openDeleteModel}
                         className='transition-all duration-500 ease-in-out py-2 px-6 flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
@@ -90,7 +99,6 @@ function Options({ postId, commentId, commentText, replyId = null }) {
                 showDeleteModal
                 &&
                 <DeleteModal
-                    open={showDeleteModal}
                     closeDeleteModal={closeDeleteModal}
                     postId={postId}
                     commentId={commentId}
@@ -102,8 +110,12 @@ function Options({ postId, commentId, commentText, replyId = null }) {
                 showEditModal
                 &&
                 <UpdateModal
-                    open={showEditModal}
                     closeEditModal={closeEditModal}
+                    postId={postId}
+                    commentId={commentId}
+                    replyId={replyId}
+                    commentText={commentText}
+                    replyUsername={replyUsername}
                 />
             }
         </>
