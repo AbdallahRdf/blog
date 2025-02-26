@@ -39,7 +39,7 @@ function UserDropDown() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className='bg-zinc-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-400 border border-zinc-300 dark:border-zinc-700 rounded-2xl w-52 sm:w-60 pt-4 flex flex-col overflow-hidden absolute right-2'
+            className='transition-all duration-500 ease-in-out bg-zinc-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border border-zinc-300 dark:border-zinc-700 rounded-2xl w-52 sm:w-60 pt-4 flex flex-col overflow-hidden absolute right-2'
         >
             <div className='ps-3 pb-2'>
                 {
@@ -60,13 +60,13 @@ function UserDropDown() {
                 <>
                     <Link
                         to="/dashboard"
-                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                        className='transition-all duration-500 ease-in-out ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
                     >
                         <ChartNoAxesCombined className='inline size-5 sm:size-6' /> Dashboard
                     </Link >
                     <Link
                         to="/posts/new"
-                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                        className='transition-all duration-500 ease-in-out ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
                     >
                         <Pencil className='inline size-5 sm:size-6' /> Create new post
                     </Link >
@@ -75,7 +75,7 @@ function UserDropDown() {
 
             <Link
                 to="/profile"
-                className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                className='transition-all duration-500 ease-in-out ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
             >
                 <UserRound className='inline size-5 sm:size-6' /> Profile
             </Link >
@@ -86,7 +86,7 @@ function UserDropDown() {
                 <>
                     <Link
                         to="/posts/new"
-                        className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                        className='transition-all duration-500 ease-in-out ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
                     >
                         <Users className='inline size-5 sm:size-6' /> Users
                     </Link >
@@ -95,14 +95,14 @@ function UserDropDown() {
 
             <Link
                 to="/saved"
-                className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                className='transition-all duration-500 ease-in-out ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
             >
                 <BookmarkCheck className='inline size-5 sm:size-6' /> Saved posts
             </Link >
 
             <button
                 onClick={logout}
-                className='ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
+                className='transition-all duration-500 ease-in-out ps-3 py-3 flex items-center gap-2 text-base sm:text-lg border-t border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-950 dark:hover:text-white'
             >
                 <LogOut className='inline size-5 sm:size-6' /> Log out
             </button>

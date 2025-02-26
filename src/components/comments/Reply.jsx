@@ -9,6 +9,8 @@ import useToast from '../../hooks/useToast';
 import { AuthContext, PostAuthorContext } from '../../context/contexts';
 import ReplyForm from './ReplyForm';
 import AuthorTag from './AuthorTag';
+import Options from './Options';
+import userRoles from '../../enums/userRoles';
 
 function ReplyBox({ postId, commentId, reply }) {
 
@@ -36,6 +38,13 @@ function ReplyBox({ postId, commentId, reply }) {
         }
     }
 
+    const replyText = reply.body.split(' ').map((word) => {
+        if (word === reply.replyUsername) {
+            return <a href={`/users/${word}`} className='font-bold text-blue-500 hover:underline'> {word} </a>
+        }
+        return `${word} `;
+    });
+
     return (
         <>
             <div className='relative flex items-start ms-8 md:ms-12'>
@@ -58,14 +67,7 @@ function ReplyBox({ postId, commentId, reply }) {
                         {formatDate(reply.createdAt)}
                     </p>
                     <p className='transition-colors duration-500 ease-in-out text-sm md:text-lg text-zinc-800 dark:text-zinc-200 my-1'>
-                        {
-                            reply.body.split(' ').map((word) => {
-                                if (word === reply.replyUsername) {
-                                    return <a href={`/users/${word}`} className='font-bold text-blue-500 hover:underline'> {word} </a>
-                                }
-                                return `${word} `;
-                            })
-                        }
+                        {replyText}
                     </p>
 
                     <div className='flex gap-5'>
@@ -91,9 +93,12 @@ function ReplyBox({ postId, commentId, reply }) {
                     </div>
 
                     {/* options */}
-                    <button className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full p-1 m-1 absolute top-0 right-0'>
-                        <Ellipsis className="size-4 md:size-5 inline" />
-                    </button>
+                    {
+                        // if user is the owner of the comment or user is not a normal user
+                        (user && (user.id === reply.owner._id || user.role !== userRoles.USER))
+                        &&
+                        <Options postId={postId} commentId={commentId} replyId={reply._id} commentText={replyText} />
+                    }
                 </div>
             </div>
             {/* reply form */}

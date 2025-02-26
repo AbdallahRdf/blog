@@ -13,6 +13,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import ReplyButton from './ReplyButton';
 import useToast from '../../hooks/useToast';
 import AuthorTag from './AuthorTag';
+import Options from './Options';
 
 const LIMIT = 15; // number of replies to fetch
 
@@ -62,6 +63,8 @@ function Comment({ comment, postId }) {
     return (
         <>
             <div className='relative flex items-start'>
+            {/* <div className='relative flex items-start border border-zinc-200 dark:border-zinc-600 box-border my-2 px-3 rounded-2xl'> */}
+
                 {/* user avatar */}
                 <button className='mt-3'>
                     <CircleUserRoundIcon className='transition-colors duration-500 ease-in-out size-9 md:size-12 text-zinc-800 dark:text-zinc-200' />
@@ -128,13 +131,10 @@ function Comment({ comment, postId }) {
 
                     {/* options */}
                     {
-                        //todo: make his work
                         // if user is the owner of the comment or user is not a normal user
                         (user && (user.id === comment.owner._id || user.role !== userRoles.USER))
                         &&
-                        <button className='transition-colors duration-500 ease-in-out text-zinc-800 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full p-1 m-1 absolute top-0 right-0'>
-                            <Ellipsis className="size-4 md:size-5 inline" />
-                        </button>
+                        <Options postId={postId} commentId={comment._id} commentText={comment.body} />
                     }
                 </div>
             </div>
